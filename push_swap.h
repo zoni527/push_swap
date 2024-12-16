@@ -17,10 +17,14 @@
 
 typedef struct s_stack
 {
-	t_list	first;
-	t_list	second_to_last;
-	int	pop(t_list *node);
-	int	push(t_list *node);
+	t_list	*top;
+	int		size;
+	int		error;
 }	t_stack;
+
+int		push(t_stack *stack, int num);
+int		pop(t_stack *stack);
+int		peek(t_stack *stack);
+void	print_stack(t_stack *stack);
 
 #endif

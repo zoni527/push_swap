@@ -15,6 +15,12 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <limits.h>
+# include <stdarg.h>
+# include <stdint.h>
+
+# ifndef CONVERSION_SET
+#  define CONVERSION_SET "cspdiuxX%"
+# endif
 
 # ifndef HEX_BASE_LOWER_CASE
 #  define HEX_BASE_LOWER_CASE "0123456789abcdef"
@@ -106,5 +112,43 @@ int		ft_ulong_digits(unsigned long n);
 int		ft_ulong_hex_digits(unsigned long n);
 
 int		ft_free_ptr_return_int(void **ptr_to_ptr, int i);
+
+//------------------------------------------------------------------------------
+// get_next_line.h
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1024
+# endif
+
+# ifndef FILE_LIMIT
+#  define FILE_LIMIT 10
+# endif
+
+typedef struct s_buffer
+{
+	int			fd;
+	int			eof;
+	size_t		flushed_bytes;
+	size_t		unflushed_bytes;
+	char		memory[BUFFER_SIZE];
+}	t_buffer;
+
+char	*get_next_line(int fd);
+size_t	ft_strlen(const char *str);
+void	*ft_memmove(void *dest, const void *src, size_t n);
+char	*strjoin_and_free(char *s1, char *s2);
+
+//------------------------------------------------------------------------------
+// libftprintf.h
+
+int		ft_printf(const char *format_str, ...);
+int		handle_c(const char **format_str_ptr, va_list ap);
+int		handle_s(const char **format_str_ptr, va_list ap);
+int		handle_p(const char **format_str_ptr, va_list ap);
+int		handle_d(const char **format_str_ptr, va_list ap);
+int		handle_i(const char **format_str_ptr, va_list ap);
+int		handle_u(const char **format_str_ptr, va_list ap);
+int		handle_hex_lowercase(const char **format_str_ptr, va_list ap);
+int		handle_hex_uppercase(const char **format_str_ptr, va_list ap);
 
 #endif

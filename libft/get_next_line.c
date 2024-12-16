@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 
 static void		initialize(t_buffer *buffers, t_buffer **buffer, int fd);
 static void		read_into_buffer(t_buffer *buffer);

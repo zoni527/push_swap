@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 
 // Function uses memmove to combine s1 and s2 and frees both pointers before
 // returning the new combined string.

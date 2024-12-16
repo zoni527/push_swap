@@ -9,7 +9,7 @@
 /*   Updated: 2024/11/27 10:12:14 by jvarila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libftprintf.h"
+#include "libft.h"
 
 static int	handle_conversion(const char **format_str_ptr, va_list ap, char c);
 static char	next_conversion_type(const char *format_str);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftprintf.h"
+#include "libft.h"
 
 static char	*ptrtoa(uintptr_t ptr_val);
 static int	ptr_len(uintptr_t ptr);
