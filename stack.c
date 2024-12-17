@@ -25,7 +25,7 @@ int	push(t_stack *stack, int num)
 		free(node);
 		free(data);
 		ft_putstr_fd("ERROR: couldn't malloc in push\n", STDERR_FILENO);
-		stack->error = 1;
+		stack->error = MALLOCERROR;
 		return (-1);
 	}
 	*data = num;
@@ -46,11 +46,12 @@ int	pop(t_stack *stack)
 	if (stack->size == 0)
 	{
 		ft_putstr_fd("ERROR: can't pop empty stack\n", STDERR_FILENO);
+		stack->error = POPERROR;
 		return (-1);
 	}
 	temp = stack->top;
 	stack->top = stack->top->next;
-	num = *((int *)(temp->content));
+	num = *(int *)(temp->content);
 	ft_lstdelone(temp, free);
 	stack->size--;
 	return (num);
@@ -61,6 +62,7 @@ int	peek(t_stack *stack)
 	if (stack == NULL)
 	{
 		ft_putstr_fd("ERROR: stack empty, can't peek\n", STDERR_FILENO);
+		stack->error = PEEKERROR;
 		return (-1);
 	}
 	return (*(int *)(stack->top->content));
