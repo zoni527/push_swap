@@ -10,42 +10,41 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
 #include "push_swap.h"
 
-static void	rrx(t_stack *x);
+static void	rrx(t_stack *s1, t_stack *s2);
 
-void	rra(t_stack *a)
+void	rra(t_stack *a, t_stack *b)
 {
 	ft_printf("%s\n", "rra");
-	rrx(a);
+	rrx(a, b);
 }
 
-void	rrb(t_stack *b)
+void	rrb(t_stack *a, t_stack *b)
 {
 	ft_printf("%s\n", "rrb");
-	rrx(b);
+	rrx(b, a);
 }
 
 void	rrr(t_stack *a, t_stack *b)
 {
 	ft_printf("%s\n", "rrr");
-	rrx(a);
-	rrx(b);
+	rrx(a, b);
+	rrx(b, a);
 }
 
-void	rrx(t_stack *x)
+static void	rrx(t_stack *s1, t_stack *s2)
 {
-	t_stack	temp_stack;
-	int		num;
+	int	last_element;
+	int	original_size;
 
-	if (x->size <= 1)
+	if (s1->size <= 1)
 		return ;
-	temp_stack = (t_stack){0};
-	while (x->size > 1)
-		push(&temp_stack, pop(x));
-	num = pop(x);
-	while (temp_stack.size > 0)
-		push(x, pop(&temp_stack));
-	push(x, num);
+	original_size = s1->size;
+	while (s1->size > 1)
+		push(s2, pop(s1));
+	last_element = pop(s1);
+	while (s1->size < original_size - 1)
+		push(s1, pop(s2));
+	push(s1, last_element);
 }

@@ -28,8 +28,6 @@ void	pb(t_stack *a, t_stack *b)
 
 static void	px(t_stack *s1, t_stack *s2)
 {
-	int	temp;
-
 	if (s2->size == 0)
 		return ;
 	push(s1, pop(s2));

@@ -71,11 +71,16 @@ int	peek(t_stack *stack)
 void	print_stack(t_stack *stack)
 {
 	t_list	*node;
+	int		num;
 
 	node = stack->top;
 	while (node != NULL)
 	{
-		ft_printf("%i\n", *(int *)(node->content));
+		num = *(int *)(node->content);
+		if (num >= 0)
+			ft_putchar(' ');
+		ft_printf("%i ", num);
 		node = node->next;
 	}
+	ft_putchar('\n');
 }

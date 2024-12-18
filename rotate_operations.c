@@ -12,39 +12,39 @@
 
 #include "push_swap.h"
 
-static void	rx(t_stack *x);
+static void	rx(t_stack *s1, t_stack *s2);
 
-void	ra(t_stack *a)
+void	ra(t_stack *a, t_stack *b)
 {
 	ft_printf("%s\n", "ra");
-	rx(a);
+	rx(a, b);
 }
 
-void	rb(t_stack *b)
+void	rb(t_stack *a, t_stack *b)
 {
 	ft_printf("%s\n", "rb");
-	rx(b);
+	rx(b, a);
 }
 
 void	rr(t_stack *a, t_stack *b)
 {
 	ft_printf("%s\n", "rr");
-	rx(a);
-	rx(b);
+	rx(a, b);
+	rx(b, a);
 }
 
-static void	rx(t_stack *x)
+static void	rx(t_stack *s1, t_stack *s2)
 {
-	int		first_element;
-	t_stack	temp_stack;
+	int	first_element;
+	int	original_size;
 
-	if (x->size <= 1)
+	if (s1->size <= 1)
 		return ;
-	temp_stack = (t_stack){0};
-	first_element = pop(x);
-	while (x->size > 0)
-		push(&temp_stack, pop(x));
-	push(x, first_element);
-	while (temp_stack.size > 0)
-		push(x, pop(&temp_stack));
+	original_size = s1->size;
+	first_element = pop(s1);
+	while (s1->size > 0)
+		push(s2, pop(s1));
+	push(s1, first_element);
+	while (s1->size < original_size)
+		push(s1, pop(s2));
 }
