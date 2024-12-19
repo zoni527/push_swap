@@ -6,43 +6,40 @@
 #    By: jvarila <jvarila@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 15:58:04 by jvarila           #+#    #+#              #
-#    Updated: 2024/12/13 16:10:30 by jvarila          ###   ########.fr        #
+#    Updated: 2024/12/16 17:29:35 by jvarila          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = push_swap
-
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
+VPATH = ./
 
 SRCDIR = ./
-
-SRC =	$(NAME).c
-HF =	$(NAME).h
+SRC =	$(SRCDIR)push_swap.c \
+	$(SRCDIR)stack.c \
+	$(SRCDIR)push_operations.c \
+	$(SRCDIR)swap_operations.c \
+	$(SRCDIR)rotate_operations.c \
+	$(SRCDIR)reverse_rotate_operations.c
 
 OBJ = $(SRC:.c=.o)
 
-all: $(NAME)
+LIBDIR = ./libft/
+LIB = libft.a
 
-$(NAME): $(OBJ) $(HF) ./libft/libft.a
-	$(CC) $(CFLAGS) $(OBJ) -L./libft/ -l:libft.a -o $(NAME)
+all: push_swap
+
+push_swap: $(SRC) $(LIBDIR)libft.h
+	$(CC) $(CFLAGS) -I$(SRCDIR) -I$(LIBDIR) $(SRC) -L$(LIBDIR) -l:$(LIB) -o $@
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-./libft/libft.a: phony
-	@make -C ./libft/
+	$(CC) $(CFLAGS) -I$(SRCDIR) -I$(LIBDIR) $< -L$(LIBDIR) -L:$(LIB) -o $@
 
 clean:
-	@make clean -C ./libft/
-	rm -f $(OBJ)
 
 fclean: clean
-	@make fclean -C ./libft/
-	rm -f $(NAME)
+	rm -f ./push_swap_test_01
 
 re: fclean all
 
-phony:
-
-.PHONY: clean fclean re bonus phony
+.PHONY: clean fclean re all

@@ -6,7 +6,7 @@
 /*   By: jvarila <jvarila@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 16:42:55 by jvarila           #+#    #+#             */
-/*   Updated: 2024/11/12 13:00:04 by jvarila          ###   ########.fr       */
+/*   Updated: 2024/12/19 14:10:54 by jvarila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,12 @@ int		ft_uint_digits(unsigned int n);
 int		ft_ulong_digits(unsigned long n);
 int		ft_ulong_hex_digits(unsigned long n);
 
-int		ft_free_ptr_return_int(void **ptr_to_ptr, int i);
+int		free_ptr_return_int(void **ptr_to_ptr, int i);
+void	free_null_terminated_array(void ***ptr_to_array);
+void	*free_null_terminated_array_return_null(void ***ptr_to_array);
+int		free_null_terminated_array_return_int(void ***ptr_to_array, int num);
+int		write_error_return_int(char *error_message, int return_value);
+void	*write_error_return_null(char *error_message);
 
 //------------------------------------------------------------------------------
 // get_next_line.h
@@ -150,5 +155,7 @@ int		handle_i(const char **format_str_ptr, va_list ap);
 int		handle_u(const char **format_str_ptr, va_list ap);
 int		handle_hex_lowercase(const char **format_str_ptr, va_list ap);
 int		handle_hex_uppercase(const char **format_str_ptr, va_list ap);
+
+int		isnumstr(const char *str);
 
 #endif
