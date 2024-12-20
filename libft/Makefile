@@ -36,16 +36,17 @@ SRC =	ft_isalpha.c	ft_isdigit.c	ft_isalnum.c	ft_isascii.c	\
 	ft_int_digits.c	ft_ulong_digits.c	ft_uint_digits.c	\
 	ft_ulong_digits.c	ft_ulong_hex_digits.c	\
 	free_ptr_return_int.c	\
-	free_null_terminated_array.c	\
-	free_null_terminated_array_return_null.c	\
-	free_null_terminated_array_return_int.c	\
+	free_null_ended_array.c	\
+	free_null_ended_array_return_null.c	\
+	free_null_ended_array_return_int.c	\
 	write_error_return_int.c	\
 	write_error_return_null.c	\
 	ft_printf.c	handle_c.c	handle_s.c	handle_p.c	\
 	handle_d.c	handle_i.c	handle_u.c	\
 	handle_hex_lowercase.c	handle_hex_uppercase.c	\
 	get_next_line.c	get_next_line_utils.c	\
-	isnumstr.c
+	isnumstr.c	\
+	ft_atol.c
 
 OBJ = $(SRC:.c=.o)
 

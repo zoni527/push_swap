@@ -24,21 +24,24 @@ SRC =	$(SRCDIR)push_swap.c \
 
 OBJ = $(SRC:.c=.o)
 
+RM = rm -f
+
 LIBDIR = ./libft/
 LIB = libft.a
 
 all: push_swap
 
-push_swap: $(SRC) $(LIBDIR)libft.h
-	$(CC) $(CFLAGS) -I$(SRCDIR) -I$(LIBDIR) $(SRC) -L$(LIBDIR) -l:$(LIB) -o $@
+push_swap: $(OBJ) $(LIBDIR)libft.h
+	$(CC) $(CFLAGS) -I$(SRCDIR) -I$(LIBDIR) $(OBJ) -L$(LIBDIR) -l:$(LIB) -o $@
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I$(SRCDIR) -I$(LIBDIR) $< -L$(LIBDIR) -L:$(LIB) -o $@
+	$(CC) -c $< -o $@
 
 clean:
+	$(RM) $(OBJ)
 
 fclean: clean
-	rm -f ./push_swap_test_01
+	$(RM) ./push_swap
 
 re: fclean all
 

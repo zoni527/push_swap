@@ -1,25 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_null_terminated_array.c                       :+:      :+:    :+:   */
+/*   free_null_ended_array_return_int.c                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvarila <jvarila@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 14:02:38 by jvarila           #+#    #+#             */
-/*   Updated: 2024/12/19 14:58:49 by jvarila          ###   ########.fr       */
+/*   Updated: 2024/12/20 10:56:03 by jvarila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	free_null_terminated_array(void ***ptr_to_array)
+int	free_null_ended_array_return_int(void ***ptr_to_array, int num)
 {
-	void	**null_terminated_array;
-
-	null_terminated_array = *ptr_to_array;
-	while (*null_terminated_array != NULL)
-		free(*(null_terminated_array++));
-	free(*(null_terminated_array));
-	free(*ptr_to_array);
-	*ptr_to_array = NULL;
+	free_null_ended_array(ptr_to_array);
+	return (num);
 }
