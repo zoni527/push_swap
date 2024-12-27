@@ -33,11 +33,10 @@ typedef struct s_two_stacks
 	int		error;
 }	t_two_stacks;
 
-int				push(t_stack *stack, int num);
-int				pop(t_stack *stack);
-int				peek(t_stack *stack);
-void			print_stack(const t_stack *stack);
-int				stack_contains_number(const t_stack *stack, int num);
+int				validate_input(char **command_line_arguments);
+int				valid_multinumberstring(char *str);
+t_two_stacks	*parse_input(char **cl_input);
+void			sort_stack(t_two_stacks *two_stacks_ptr);
 
 void			sa(t_two_stacks *stacks_ptr);
 void			sb(t_two_stacks *stacks_ptr);
@@ -51,8 +50,10 @@ void			rra(t_two_stacks *stacks_ptr);
 void			rrb(t_two_stacks *stacks_ptr);
 void			rrr(t_two_stacks *stacks_ptr);
 
-int				validate_input(char **command_line_arguments);
-int				valid_multinumberstring(char *str);
-t_two_stacks	*parse_input(char **cl_input);
+int				push(t_stack *stack, int num);
+int				pop(t_stack *stack);
+int				peek(t_stack *stack);
+void			print_stack(const t_stack *stack);
+int				stack_contains_number(const t_stack *stack, int num);
 
 #endif

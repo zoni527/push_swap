@@ -22,7 +22,8 @@ SRC =	$(SRCDIR)push_swap.c \
 	$(SRCDIR)rotate_operations.c \
 	$(SRCDIR)reverse_rotate_operations.c \
 	$(SRCDIR)input_validation.c \
-	$(SRCDIR)input_parsing.c
+	$(SRCDIR)input_parsing.c \
+	$(SRCDIR)sort_stack.c \
 
 OBJ = $(SRC:.c=.o)
 

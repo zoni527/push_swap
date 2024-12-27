@@ -12,7 +12,7 @@
 
 #include "push_swap.h"
 
-static void			free_stacks(t_two_stacks **two_stacks_ptr_ptr);
+static void	free_stacks(t_two_stacks **two_stacks_ptr_ptr);
 
 int	main(int argc, char **argv)
 {
@@ -21,49 +21,13 @@ int	main(int argc, char **argv)
 	if (argc == 1 || !validate_input(argv + 1))
 		return (write_error_return_int("Error", 0));
 	two_stacks_ptr = parse_input(argv + 1);
-	if (!two_stacks_ptr)
+	if (!two_stacks_ptr || two_stacks_ptr->error
+		|| two_stacks_ptr->a.error || two_stacks_ptr->b.error)
+	{
+		free_stacks(&two_stacks_ptr);
 		return (write_error_return_int("Error", 0));
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	pb(two_stacks_ptr);
-	pb(two_stacks_ptr);
-	pb(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	sa(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	sb(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	ss(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	pa(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	pb(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	ra(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	rb(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	rr(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	rra(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	rrb(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	rrr(two_stacks_ptr);
-	print_stack(&two_stacks_ptr->a);
-	print_stack(&two_stacks_ptr->b);
-	free_stacks(&two_stacks_ptr);
+	}
+	sort_stack(two_stacks_ptr);
 	return (0);
 }
 
