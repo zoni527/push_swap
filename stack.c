@@ -68,7 +68,7 @@ int	peek(t_stack *stack)
 	return (*(int *)(stack->top->content));
 }
 
-void	print_stack(t_stack *stack)
+void	print_stack(const t_stack *stack)
 {
 	t_list	*node;
 	int		num;
@@ -83,4 +83,18 @@ void	print_stack(t_stack *stack)
 		node = node->next;
 	}
 	ft_putchar('\n');
+}
+
+int	stack_contains_number(const t_stack *stack, int num)
+{
+	t_list	*node;
+
+	node = stack->top;
+	while (node)
+	{
+		if (*(int *)node->content == num)
+			return (1);
+		node = node->next;
+	}
+	return (0);
 }

@@ -26,21 +26,33 @@ typedef struct s_stack
 	int		error;
 }	t_stack;
 
-int		push(t_stack *stack, int num);
-int		pop(t_stack *stack);
-int		peek(t_stack *stack);
-void	print_stack(t_stack *stack);
+typedef struct s_two_stacks
+{
+	t_stack	a;
+	t_stack	b;
+	int		error;
+}	t_two_stacks;
 
-void	sa(t_stack *a);
-void	sb(t_stack *b);
-void	ss(t_stack *a, t_stack *b);
-void	pa(t_stack *a, t_stack *b);
-void	pb(t_stack *a, t_stack *b);
-void	ra(t_stack *a, t_stack *b);
-void	rb(t_stack *a, t_stack *b);
-void	rr(t_stack *a, t_stack *b);
-void	rra(t_stack *a, t_stack *b);
-void	rrb(t_stack *a, t_stack *b);
-void	rrr(t_stack *a, t_stack *b);
+int				push(t_stack *stack, int num);
+int				pop(t_stack *stack);
+int				peek(t_stack *stack);
+void			print_stack(const t_stack *stack);
+int				stack_contains_number(const t_stack *stack, int num);
+
+void			sa(t_two_stacks *stacks_ptr);
+void			sb(t_two_stacks *stacks_ptr);
+void			ss(t_two_stacks *stacks_ptr);
+void			pa(t_two_stacks *stacks_ptr);
+void			pb(t_two_stacks *stacks_ptr);
+void			ra(t_two_stacks *stacks_ptr);
+void			rb(t_two_stacks *stacks_ptr);
+void			rr(t_two_stacks *stacks_ptr);
+void			rra(t_two_stacks *stacks_ptr);
+void			rrb(t_two_stacks *stacks_ptr);
+void			rrr(t_two_stacks *stacks_ptr);
+
+int				validate_input(char **command_line_arguments);
+int				valid_multinumberstring(char *str);
+t_two_stacks	*parse_input(char **cl_input);
 
 #endif

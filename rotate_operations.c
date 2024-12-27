@@ -14,23 +14,23 @@
 
 static void	rx(t_stack *s1, t_stack *s2);
 
-void	ra(t_stack *a, t_stack *b)
+void	ra(t_two_stacks *stacks_ptr)
 {
 	ft_printf("%s\n", "ra");
-	rx(a, b);
+	rx(&stacks_ptr->a, &stacks_ptr->b);
 }
 
-void	rb(t_stack *a, t_stack *b)
+void	rb(t_two_stacks *stacks_ptr)
 {
 	ft_printf("%s\n", "rb");
-	rx(b, a);
+	rx(&stacks_ptr->b, &stacks_ptr->a);
 }
 
-void	rr(t_stack *a, t_stack *b)
+void	rr(t_two_stacks *stacks_ptr)
 {
 	ft_printf("%s\n", "rr");
-	rx(a, b);
-	rx(b, a);
+	rx(&stacks_ptr->a, &stacks_ptr->b);
+	rx(&stacks_ptr->b, &stacks_ptr->a);
 }
 
 static void	rx(t_stack *s1, t_stack *s2)

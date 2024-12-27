@@ -11,62 +11,30 @@
 /* ************************************************************************** */
 
 #include "push_swap.h"
-#include "libft/libft.h"
 
-static int	validate_input(char **argv);
-static int	valid_multinumberstring(char *str);
+static void			free_stacks(t_two_stacks **two_stacks_ptr_ptr);
 
 int	main(int argc, char **argv)
 {
+	t_two_stacks	*two_stacks_ptr;
+
 	if (argc == 1 || !validate_input(argv + 1))
 		return (write_error_return_int("Error", 0));
+	two_stacks_ptr = parse_input(argv + 1);
+	if (!two_stacks_ptr)
+		return (write_error_return_int("Error", 0));
+	print_stack(&two_stacks_ptr->a);
+	print_stack(&two_stacks_ptr->b);
+	free_stacks(&two_stacks_ptr);
 	return (0);
 }
 
-static int	validate_input(char **cl_input)
+static void	free_stacks(t_two_stacks **two_stacks_ptr_ptr)
 {
-	while (*cl_input != NULL)
-	{
-		if (ft_strchr(*cl_input, ' '))
-		{
-			if (!valid_multinumberstring(*cl_input))
-				return (0);
-		}
-		else
-		{
-			if (!isnumstr(*cl_input)
-				|| ft_atol(*cl_input) > INT_MAX
-				|| ft_atol(*cl_input) < INT_MIN)
-				return (0);
-		}
-		cl_input++;
-	}
-	return (1);
-}
-
-static int	valid_multinumberstring(char *str)
-{
-	int	sign;
-
-	if (*str == '\0')
-		return (0);
-	while (*str)
-	{
-		sign = 1;
-		if (*str == ' ')
-		{
-			str++;
-			continue ;
-		}
-		if ((*str == '-' || *str == '+') && *(str + 1))
-			if (*(str++) == '-')
-				sign = -1;
-		if (!ft_isdigit(*str))
-			return (0);
-		if ((sign > 0 && ft_atol(str) > INT_MAX)
-			|| (sign < 0 && ft_atol(str) > -(long)INT_MIN))
-			return (0);
-		str++;
-	}
-	return (1);
+	if ((*two_stacks_ptr_ptr)->a.top)
+		ft_lstclear(&(*two_stacks_ptr_ptr)->a.top, free);
+	if ((*two_stacks_ptr_ptr)->b.top)
+		ft_lstclear(&(*two_stacks_ptr_ptr)->b.top, free);
+	free(*two_stacks_ptr_ptr);
+	*two_stacks_ptr_ptr = NULL;
 }

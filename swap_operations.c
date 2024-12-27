@@ -14,23 +14,23 @@
 
 static void	sx(t_stack *x);
 
-void	sa(t_stack *a)
+void	sa(t_two_stacks *stacks_ptr)
 {
 	ft_printf("%s\n", "sa");
-	sx(a);
+	sx(&stacks_ptr->a);
 }
 
-void	sb(t_stack *b)
+void	sb(t_two_stacks *stacks_ptr)
 {
 	ft_printf("%s\n", "sb");
-	sx(b);
+	sx(&stacks_ptr->b);
 }
 
-void	ss(t_stack *a, t_stack *b)
+void	ss(t_two_stacks *stacks_ptr)
 {
 	ft_printf("%s\n", "ss");
-	sx(a);
-	sx(b);
+	sx(&stacks_ptr->a);
+	sx(&stacks_ptr->b);
 }
 
 static void	sx(t_stack *x)

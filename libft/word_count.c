@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_operations.c                                  :+:      :+:    :+:   */
+/*   word_count.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvarila <jvarila@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/17 09:52:53 by jvarila           #+#    #+#             */
-/*   Updated: 2024/12/18 10:26:49 by jvarila          ###   ########.fr       */
+/*   Created: 2024/12/27 10:42:36 by jvarila           #+#    #+#             */
+/*   Updated: 2024/12/27 10:46:57 by jvarila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-static void	px(t_stack *s1, t_stack *s2);
-
-void	pa(t_two_stacks *stacks_ptr)
+int	word_count(const char *str)
 {
-	ft_printf("%s\n", "pa");
-	px(&stacks_ptr->a, &stacks_ptr->b);
-}
+	int	wc;
 
-void	pb(t_two_stacks *stacks_ptr)
-{
-	ft_printf("%s\n", "pb");
-	px(&stacks_ptr->b, &stacks_ptr->a);
-}
-
-static void	px(t_stack *s1, t_stack *s2)
-{
-	if (s2->size == 0)
-		return ;
-	push(s1, pop(s2));
+	if (!*str)
+		return (0);
+	wc = 0;
+	while (*str)
+	{
+		if (*str == ' ' || (*str >= 9 && *str <= 13))
+		{
+			str++;
+			continue ;
+		}
+		wc++;
+		while (!(*str == ' ' || (*str >= 9 && *str <= 13)))
+			str++;
+	}
+	return (wc);
 }

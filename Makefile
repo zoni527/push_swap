@@ -20,7 +20,9 @@ SRC =	$(SRCDIR)push_swap.c \
 	$(SRCDIR)push_operations.c \
 	$(SRCDIR)swap_operations.c \
 	$(SRCDIR)rotate_operations.c \
-	$(SRCDIR)reverse_rotate_operations.c
+	$(SRCDIR)reverse_rotate_operations.c \
+	$(SRCDIR)input_validation.c \
+	$(SRCDIR)input_parsing.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -32,10 +34,10 @@ LIB = libft.a
 all: push_swap
 
 push_swap: $(OBJ) $(LIBDIR)libft.h
-	$(CC) $(CFLAGS) -I$(SRCDIR) -I$(LIBDIR) $(OBJ) -L$(LIBDIR) -l:$(LIB) -o $@
+	$(CC) $(CFLAGS) -I$(SRCDIR) -I$(LIBDIR) $(OBJ) -L$(LIBDIR) -l:$(LIB) -o $@ -g
 
 %.o: %.c
-	$(CC) -c $< -o $@
+	$(CC) -c $< -o $@ -g
 
 clean:
 	$(RM) $(OBJ)

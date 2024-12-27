@@ -46,7 +46,9 @@ SRC =	ft_isalpha.c	ft_isdigit.c	ft_isalnum.c	ft_isascii.c	\
 	handle_hex_lowercase.c	handle_hex_uppercase.c	\
 	get_next_line.c	get_next_line_utils.c	\
 	isnumstr.c	\
-	ft_atol.c
+	ft_atol.c	\
+	word_count.c	\
+	skip_whitespace.c	skip_char.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -55,6 +57,8 @@ all: $(NAME)
 $(NAME): $(OBJ) $(HF)
 	$(AR) $(NAME) $(OBJ)
 
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@ -g
 clean:
 	rm -f $(OBJ)
 
