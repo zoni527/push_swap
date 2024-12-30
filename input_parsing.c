@@ -30,13 +30,15 @@ t_two_stacks	*parse_input(char **cl_input)
 		num = ft_atoi(str);
 		if (stack_contains_number(&stacks_ptr->a, num))
 			return (free_stacks_return_null(&stacks_ptr));
-		push(&stacks_ptr->a, num);
+		push(&stacks_ptr->b, num);
 		str = ft_strchr(str, ' ');
 		if (str && word_count(str))
 			str = skip_char(str, ' ');
 		else
 			str = *(++cl_input);
 	}
+	while (stacks_ptr->b.size != 0)
+		push(&stacks_ptr->a, pop(&stacks_ptr->b));
 	return (stacks_ptr);
 }
 
