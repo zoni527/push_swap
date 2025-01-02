@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./libft/libft.h"
 #include "push_swap.h"
 
 #define BOTH	1
@@ -20,37 +19,66 @@
 static int	stack_sorted(t_stack *stack_ptr);
 static int	swappable(t_two_stacks *two_stacks_ptr);
 static void	double_bubble_sort(t_two_stacks *ts_ptr);
+static void	merge_sort(t_two_stacks *ts_ptr);
+static void	divide_and_presort(t_two_stacks *ts_ptr);
 
 void	sort_stack(t_two_stacks *two_stacks_ptr)
 {
 	if (stack_sorted(&two_stacks_ptr->a))
 		return ;
 	if (two_stacks_ptr->a.size == 2)
-		return pa(two_stacks_ptr);
-	double_bubble_sort(two_stacks_ptr);
+		return sa(two_stacks_ptr);
+	merge_sort(two_stacks_ptr);
 }
 
 static int	stack_sorted(t_stack *stack_ptr)
 {
 	t_list	*node;
-	int		sorted;
 
 	if (stack_ptr->size == 1)
 		return (1);
 	node = stack_ptr->top;
-	sorted = 1;
 	while (node->next)
 	{
 		if (*(int *)node->content > *(int *)node->next->content)
-		{
-			sorted = 0;
-			break ;
-		}
+			return (0);
 		node = node->next;
 	}
-	return (sorted);
+	return (1);
 }
 
+static void	merge_sort(t_two_stacks *ts_ptr)
+{
+	j = 2;
+	while (ts_ptr->b.size || !stack_sorted(&ts_ptr->a))
+	{
+		j = (peek(&ts_ptr->a) < peek(&ts_ptr->b)) * peek(&ts_ptr->a)
+			+ (peek(&ts_ptr->b) < peek(&ts_ptr->a) * peek(&ts_ptr->b));
+	}
+}
+
+// First push half of a to b and 
+static void	divide_and_presort(t_two_stacks *ts_ptr)
+{
+	int	i;
+	int	swap_state;
+
+	i = (int)((double)ts_ptr->a.size / 2 + 0.5);
+	while (ts_ptr->a.size > i)
+	{
+		pb(ts_ptr);
+		pb(ts_ptr);
+		swap_state = swappable(ts_ptr);
+		if (swap_state == BOTH)
+			ss(ts_ptr);
+		if (swap_state == A)
+			sa(ts_ptr);
+		if (swap_state == B)
+			sb(ts_ptr);
+		ra(ts_ptr);
+		ra(ts_ptr);
+	}
+}
 static void	double_bubble_sort(t_two_stacks *ts_ptr)
 {
 	int	elements;
@@ -92,8 +120,7 @@ static void	double_bubble_sort(t_two_stacks *ts_ptr)
 	}
 	while (ts_ptr->b.size > 0)
 	{
-		if (*(int *)ts_ptr->b.top->content
-			< *(int *)ts_ptr->a.top->content)
+		if (peek(&ts_ptr->b) < peek(&ts_ptr->a))
 		{
 			pa(ts_ptr);
 			ra(ts_ptr);
