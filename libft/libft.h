@@ -120,7 +120,7 @@ int			write_error_return_int(char *error_message, int return_value);
 void		*write_error_return_null(char *error_message);
 
 //------------------------------------------------------------------------------
-// get_next_line.h
+// get_next_line
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1024
@@ -143,9 +143,8 @@ char		*get_next_line(int fd);
 size_t		ft_strlen(const char *str);
 void		*ft_memmove(void *dest, const void *src, size_t n);
 char		*strjoin_and_free(char *s1, char *s2);
-
 //------------------------------------------------------------------------------
-// libftprintf.h
+// ft_printf
 
 int			ft_printf(const char *format_str, ...);
 int			handle_c(const char **format_str_ptr, va_list ap);
@@ -156,10 +155,14 @@ int			handle_i(const char **format_str_ptr, va_list ap);
 int			handle_u(const char **format_str_ptr, va_list ap);
 int			handle_hex_lowercase(const char **format_str_ptr, va_list ap);
 int			handle_hex_uppercase(const char **format_str_ptr, va_list ap);
+//------------------------------------------------------------------------------
 
 int			isnumstr(const char *str);
 int			word_count(const char *str);
 char		*skip_whitespace(const char *str);
 char		*skip_char(const char *str, char c);
+
+int			larger_int(int a, int b);
+int			smaller_int(int a, int b);
 
 #endif

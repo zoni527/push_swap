@@ -18,9 +18,10 @@
 
 static int	stack_sorted(t_stack *stack_ptr);
 static int	swappable(t_two_stacks *two_stacks_ptr);
-static void	double_bubble_sort(t_two_stacks *ts_ptr);
+// static void	double_bubble_sort(t_two_stacks *ts_ptr);
 static void	merge_sort(t_two_stacks *ts_ptr);
 static void	divide_and_presort(t_two_stacks *ts_ptr);
+void	merge_sorted_portions_and_rotate_to_end(t_two_stacks *ts_ptr);
 
 void	sort_stack(t_two_stacks *two_stacks_ptr)
 {
@@ -47,23 +48,81 @@ static int	stack_sorted(t_stack *stack_ptr)
 	return (1);
 }
 
+int	count_sorted_sections(t_stack *stack)
+{
+	int		count;
+	t_list	*node;
+
+	if (stack->size == 0)
+		return (0);
+	count = 0;
+	node = stack->top;
+	while (node)
+	{
+		while (node->next 
+			&& *(int *)node->content < *(int *)node->next->content)
+		{
+			node = node->next;
+		}
+		count++;
+		node = node->next;
+	}
+	return (count);
+}
+
 static void	merge_sort(t_two_stacks *ts_ptr)
 {
-	j = 2;
+	divide_and_presort(ts_ptr);
 	while (ts_ptr->b.size || !stack_sorted(&ts_ptr->a))
 	{
-		j = (peek(&ts_ptr->a) < peek(&ts_ptr->b)) * peek(&ts_ptr->a)
-			+ (peek(&ts_ptr->b) < peek(&ts_ptr->a) * peek(&ts_ptr->b));
+		merge_sorted_portions_and_rotate_to_end(ts_ptr);
 	}
 }
 
-// First push half of a to b and 
+void	merge_sorted_portions_and_rotate_to_end(t_two_stacks *ts_ptr)
+{
+	t_list	*node;
+	t_stack	*src;
+	t_stack	*dest;
+	void	(*push)(t_two_stacks *ts_ptr);
+	void	(*rotate)(t_two_stacks *ts_ptr);
+
+	if (ts_ptr->a.size > ts_ptr->b.size)
+	{
+		src = &ts_ptr->a;
+		dest = &ts_ptr->b;
+		push = pb;
+		rotate = rb;
+	}
+	else
+	{
+		src = &ts_ptr->b;
+		dest = &ts_ptr->a;
+		push = pa;
+		rotate = rb;
+	}
+	node = src->top;
+	while (node->next && *(int *)node->content < *(int *)node->next->content)
+	{
+		if (peek(src) < peek(dest))
+		{
+			push(ts_ptr);
+			rotate(ts_ptr);
+		}
+		else
+			rb(ts_ptr);
+	}
+}
+
+// First push half of a to b and presort
 static void	divide_and_presort(t_two_stacks *ts_ptr)
 {
 	int	i;
 	int	swap_state;
 
-	i = (int)((double)ts_ptr->a.size / 2 + 0.5);
+	i = ts_ptr->a.size / 4;
+	if (i == 0)
+		i++;
 	while (ts_ptr->a.size > i)
 	{
 		pb(ts_ptr);
@@ -78,7 +137,10 @@ static void	divide_and_presort(t_two_stacks *ts_ptr)
 		ra(ts_ptr);
 		ra(ts_ptr);
 	}
+	if ((ts_ptr->a.size + ts_ptr->b.size) % 4 != 0)
+		pb(ts_ptr);
 }
+/*
 static void	double_bubble_sort(t_two_stacks *ts_ptr)
 {
 	int	elements;
@@ -134,7 +196,7 @@ static void	double_bubble_sort(t_two_stacks *ts_ptr)
 	while (!stack_sorted(&ts_ptr->a))
 		ra(ts_ptr);
 }
-
+*/
 static int	swappable(t_two_stacks *ts_ptr)
 {
 	int	a_swappable;
