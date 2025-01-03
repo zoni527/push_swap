@@ -14,23 +14,29 @@
 
 static void	rx(t_stack *s1, t_stack *s2);
 
-void	ra(t_two_stacks *stacks_ptr)
+void	ra(t_two_stacks *two_stacks_ptr)
 {
+	if (two_stacks_ptr->a.size <= 1)
+		return ;
 	ft_printf("%s\n", "ra");
-	rx(&stacks_ptr->a, &stacks_ptr->b);
+	rx(&two_stacks_ptr->a, &two_stacks_ptr->b);
 }
 
-void	rb(t_two_stacks *stacks_ptr)
+void	rb(t_two_stacks *two_stacks_ptr)
 {
+	if (two_stacks_ptr->b.size <= 1)
+		return ;
 	ft_printf("%s\n", "rb");
-	rx(&stacks_ptr->b, &stacks_ptr->a);
+	rx(&two_stacks_ptr->b, &two_stacks_ptr->a);
 }
 
-void	rr(t_two_stacks *stacks_ptr)
+void	rr(t_two_stacks *two_stacks_ptr)
 {
+	if (two_stacks_ptr->a.size <= 1 && two_stacks_ptr->b.size <= 1)
+		return ;
 	ft_printf("%s\n", "rr");
-	rx(&stacks_ptr->a, &stacks_ptr->b);
-	rx(&stacks_ptr->b, &stacks_ptr->a);
+	rx(&two_stacks_ptr->a, &two_stacks_ptr->b);
+	rx(&two_stacks_ptr->b, &two_stacks_ptr->a);
 }
 
 static void	rx(t_stack *s1, t_stack *s2)
