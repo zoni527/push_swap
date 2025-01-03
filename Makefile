@@ -31,21 +31,27 @@ RM = rm -f
 
 LIBDIR = ./libft/
 LIB = libft.a
+LIBH = libft.h
 
 all: push_swap
 
-push_swap: $(OBJ) $(LIBDIR)libft.h
+push_swap: $(OBJ) $(LIBDIR)$(LIBH) $(LIBDIR)$(LIB)
 	$(CC) $(CFLAGS) -I$(SRCDIR) -I$(LIBDIR) $(OBJ) -L$(LIBDIR) -l:$(LIB) -o $@ -g
+
+$(LIBDIR)$(LIB):
+	make libft.a -C ./libft/
 
 %.o: %.c
 	$(CC) -c $< -o $@ -g
 
 clean:
+	make clean -C ./libft/
 	$(RM) $(OBJ)
 
 fclean: clean
+	make fclean -C ./libft/
 	$(RM) ./push_swap
 
 re: fclean all
 
-.PHONY: clean fclean re all
+.PHONY: clean fclean re all phony
