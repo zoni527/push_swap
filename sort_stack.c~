@@ -16,53 +16,36 @@
 #define A		2
 #define B		3
 
-#define REGULAR	1
-#define REVERSE	-1
-
-static int	stack_sorted(t_stack *stack_ptr, int order);
+static int	stack_sorted(t_stack *stack_ptr);
 static int	first_element_greater_than_second(t_stack *stack_ptr);
 // static void	double_bubble_sort(t_two_stacks *ts_ptr);
 static void	merge_sort(t_two_stacks *ts_ptr);
 static void	divide_and_presort(t_two_stacks *ts_ptr);
 void	merge_sorted_portions_and_rotate_to_end(t_two_stacks *ts_ptr);
-int	sorted_sublist_len(t_stack *stack_ptr, int order);
-int	count_sorted_sublists(t_stack *stack, int order);
-int	first_int_larger(int a, int b);
-int	first_int_smaller(int a, int b);
+int	sorted_sublist_len(t_stack *stack_ptr);
+int	count_sorted_sublists(t_stack *stack);
 
 void	sort_stack(t_two_stacks *two_stacks_ptr)
 {
-	if (stack_sorted(&two_stacks_ptr->a, REGULAR))
+	if (stack_sorted(&two_stacks_ptr->a))
 		return ;
 	if (two_stacks_ptr->a.size == 2)
 		return sa(two_stacks_ptr);
 	merge_sort(two_stacks_ptr);
 }
 
-static int	stack_sorted(t_stack *stack_ptr, int order)
+static int	stack_sorted(t_stack *stack_ptr)
 {
 	t_list	*node;
 
 	if (stack_ptr->size == 1)
 		return (1);
 	node = stack_ptr->top;
-	if (order == REGULAR)
+	while (node->next)
 	{
-		while (node->next)
-		{
-			if (*(int *)node->content > *(int *)node->next->content)
-				return (0);
-			node = node->next;
-		}
-	}
-	else
-	{
-		while (node->next)
-		{
-			if (*(int *)node->content < *(int *)node->next->content)
-				return (0);
-			node = node->next;
-		}
+		if (*(int *)node->content > *(int *)node->next->content)
+			return (0);
+		node = node->next;
 	}
 	return (1);
 }
@@ -73,7 +56,7 @@ static void	merge_sort(t_two_stacks *ts_ptr)
 
 	counter = 1000;
 	divide_and_presort(ts_ptr);
-	while (counter-- && (ts_ptr->b.size || !stack_sorted(&ts_ptr->a, REGULAR)))
+	while (counter-- && (ts_ptr->b.size || !stack_sorted(&ts_ptr->a)))
 	{
 		merge_sorted_portions_and_rotate_to_end(ts_ptr);
 	}
@@ -82,19 +65,19 @@ static void	merge_sort(t_two_stacks *ts_ptr)
 // First push half of a to b and presort
 static void	divide_and_presort(t_two_stacks *ts_ptr)
 {
-	int	groups_of_two_in_half;
+	int	i;
 	int	a_swappable;
 	int	b_swappable;
 
-	groups_of_two_in_half = ts_ptr->a.size / 4;
-	if (groups_of_two_in_half == 0)
-		groups_of_two_in_half++;
-	while (groups_of_two_in_half--)
+	i = ts_ptr->a.size / 4;
+	if (i == 0)
+		i++;
+	while (i--)
 	{
 		pb(ts_ptr);
 		pb(ts_ptr);
 		a_swappable = first_element_greater_than_second(&ts_ptr->a);
-		b_swappable = !first_element_greater_than_second(&ts_ptr->b);
+		b_swappable = first_element_greater_than_second(&ts_ptr->b);
 		if (a_swappable && b_swappable)
 			ss(ts_ptr);
 		if (a_swappable && !b_swappable)
@@ -121,33 +104,56 @@ void	merge_sorted_portions_and_rotate_to_end(t_two_stacks *ts_ptr)
 
 	if (!ts_ptr->a.size)
 	{
-		if (stack_sorted(&ts_ptr->b, REVERSE))
+		if (stack_sorted(&ts_ptr->b))
 		{
 			while (ts_ptr->b.size)
+			{
 				pa(ts_ptr);
+				ra(ts_ptr);
+			}
 			return ;
 		}
-		sorted_sublists = count_sorted_sublists(&ts_ptr->b, REVERSE);
+		sorted_sublists = count_sorted_sublists(&ts_ptr->b);
 		sorted_sublists /= 2;
 		while (sorted_sublists--)
 		{
-			first_sorted_sublist_len = sorted_sublist_len(&ts_ptr->b, REVERSE);
+			first_sorted_sublist_len = sorted_sublist_len(&ts_ptr->b);
 			while (first_sorted_sublist_len--)
+			{
 				pa(ts_ptr);
+				ra(ts_ptr);
+			}
 		}
 	}
 	if (!ts_ptr->b.size)
 	{
-		sorted_sublists = count_sorted_sublists(&ts_ptr->a, REGULAR);
+		sorted_sublists = count_sorted_sublists(&ts_ptr->a);
 		sorted_sublists /= 2;
 		while (sorted_sublists--)
 		{
-			first_sorted_sublist_len = sorted_sublist_len(&ts_ptr->a, REGULAR);
+			first_sorted_sublist_len = sorted_sublist_len(&ts_ptr->a);
 			while (first_sorted_sublist_len--)
+			{
 				pb(ts_ptr);
+				rb(ts_ptr);
+			}
 		}
 	}
-	sorted_sublist_len_src = sorted_sublist_len(&ts_ptr->a, REGULAR);
+	if (ts_ptr->a.size > ts_ptr->b.size)
+	{
+		src = &ts_ptr->a;
+		dest = &ts_ptr->b;
+		push = pb;
+		rotate = rb;
+	}
+	else
+	{
+		src = &ts_ptr->b;
+		dest = &ts_ptr->a;
+		push = pa;
+		rotate = ra;
+	}
+	sorted_sublist_len_src = sorted_sublist_len(src);
 	sorted_sublist_len_dest = sorted_sublist_len(dest);
 	while (sorted_sublist_len_src || sorted_sublist_len_dest)
 	{
@@ -172,24 +178,18 @@ void	merge_sorted_portions_and_rotate_to_end(t_two_stacks *ts_ptr)
 	}
 }
 
-int	sorted_sublist_len(t_stack *stack_ptr, int order)
+int	sorted_sublist_len(t_stack *stack_ptr)
 {
 	int		count;
 	t_list	*node;
-	int		(*comp)(int a, int b);
 
 	if (stack_ptr->size == 0)
 		return (0);
 	if (stack_ptr->size == 1)
 		return (1);
-	if (order == REGULAR)
-		comp = first_int_smaller;
-	else
-		comp = first_int_larger;
 	node = stack_ptr->top;
 	count = 1;
-	while (node->next 
-		&& comp(*(int *)node->content, *(int *)node->next->content))
+	while (node->next && *(int *)node->content < *(int *)node->next->content)
 	{
 		count++;
 		node = node->next;
@@ -266,36 +266,24 @@ static int	first_element_greater_than_second(t_stack *stack_ptr)
 	return (first > second);
 }
 
-int	count_sorted_sublists(t_stack *stack, int order)
+int	count_sorted_sublists(t_stack *stack)
 {
 	int		count;
-	int		(*comp)(int a, int b);
 	t_list	*node;
 
 	if (stack->size == 0)
 		return (0);
-	if (order == REGULAR)
-		comp = first_int_smaller;
-	else
-		comp = first_int_larger;
 	count = 0;
 	node = stack->top;
 	while (node)
 	{
-		while (node->next 
-			&& comp(*(int *)node->content, *(int *)node->next->content))
+		while (node->next
+			&& *(int *)node->content < *(int *)node->next->content)
+		{
 			node = node->next;
+		}
 		count++;
 		node = node->next;
 	}
 	return (count);
-}
-
-int	first_int_larger(int a, int b)
-{
-	return (a > b);
-}
-int	first_int_smaller(int a, int b)
-{
-	return (a < b);
 }
