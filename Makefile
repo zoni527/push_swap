@@ -24,6 +24,7 @@ SRC =	$(SRCDIR)push_swap.c \
 	$(SRCDIR)input_validation.c \
 	$(SRCDIR)input_parsing.c \
 	$(SRCDIR)sort_stack.c \
+	$(SRCDIR)cleanup_and_exit.c
 
 OBJ = $(SRC:.c=.o)
 

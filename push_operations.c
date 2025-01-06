@@ -14,16 +14,20 @@
 
 static void	px(t_stack *s1, t_stack *s2);
 
-void	pa(t_two_stacks *stacks_ptr)
+void	pa(t_two_stacks *ts_ptr)
 {
 	ft_printf("%s\n", "pa");
-	px(&stacks_ptr->a, &stacks_ptr->b);
+	px(&ts_ptr->a, &ts_ptr->b);
+	if (ts_ptr->a.error || ts_ptr->b.error)
+		cleanup_and_exit(&ts_ptr);
 }
 
-void	pb(t_two_stacks *stacks_ptr)
+void	pb(t_two_stacks *ts_ptr)
 {
 	ft_printf("%s\n", "pb");
-	px(&stacks_ptr->b, &stacks_ptr->a);
+	px(&ts_ptr->b, &ts_ptr->a);
+	if (ts_ptr->a.error || ts_ptr->b.error)
+		cleanup_and_exit(&ts_ptr);
 }
 
 static void	px(t_stack *s1, t_stack *s2)

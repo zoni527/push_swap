@@ -33,14 +33,124 @@ int	top_sorted_sublist_len(t_stack *stack_ptr, int order);
 int	bottom_sorted_sublist_len(t_stack *stack_ptr, int order);
 int	count_sublist_len(t_list *node, int order);
 int	count_sorted_sublists(t_stack *stack, int order);
+void	sort_a_b_c(t_two_stacks *ts_ptr, int a, int b, int c, int order);
 
-void	sort_stack(t_two_stacks *two_stacks_ptr)
+t_list *min_node(t_list *lst)
 {
-	if (stack_sorted(&two_stacks_ptr->a, ASCENDING))
+	int		min;
+	t_list	*node;
+
+	if (!lst)
+		return (NULL);
+	min = INT_MAX;
+	if (!lst->next)
+		return (lst);
+	node = NULL;
+	while (lst)
+	{
+		if (node_val(lst) <= min)
+		{
+			min = node_val(lst);
+			node = lst;
+		}
+		lst = lst->next;
+	}
+	return (node);
+}
+
+t_list	*next_largest_node(t_list *lst, int num)
+{
+	int		previous_min;
+	int		val;
+	t_list	*node;
+
+	if (!lst)
+		return (NULL);
+	if (!lst->next)
+		return (lst);
+	previous_min = INT_MAX;
+	node = NULL;
+	while (lst)
+	{
+		val = node_val(lst);
+		if (val > num && val <= previous_min)
+		{
+			node = lst;
+			previous_min = val;
+		}
+		lst = lst->next;
+	}
+	return (node);
+}
+
+void	normalize_stack(t_stack *stack)
+{
+	int	min;
+	int	count;
+	t_list *node;
+
+	if (!stack->size)
 		return ;
-	if (two_stacks_ptr->a.size == 2)
-		return sa(two_stacks_ptr);
-	merge_sort(two_stacks_ptr);
+	min = INT_MIN;
+	node = stack->top;
+	count = 0;
+	while (count < stack->size)
+	{
+		node = next_largest_node(stack->top, min);
+		*(int *)node->content = count;
+		min = node_val(node);
+		count++;
+	}
+}
+
+void	sort_three(t_two_stacks *ts_ptr, int order)
+{
+	int	first;
+	int	second;
+	int	third;
+
+	first = node_val(ts_ptr->a.top);
+	second = node_val(ts_ptr->a.top->next);
+	third = node_val(ts_ptr->a.top->next->next);
+	sort_a_b_c(ts_ptr, first, second, third, order);
+}
+
+void	sort_a_b_c(t_two_stacks *ts_ptr, int a, int b, int c, int order)
+{
+	int	(*comp)(int a, int b);
+
+	if (order == ASCENDING)
+		comp = first_int_smaller;
+	else
+		comp = first_int_larger;
+	if (comp(b, a) && comp(b, c) && comp(c, a))
+		ra(ts_ptr);
+	if (comp(a, b) && comp(c, b) && comp(c, a))
+		rra(ts_ptr);
+	if (comp(b, a) && comp(b, c) && comp(a, c))
+		sa(ts_ptr);
+	if (comp(a, b) && comp(c, b) && comp(a, c))
+	{
+		sa(ts_ptr);
+		ra(ts_ptr);
+	}
+	if (comp(b, a) && comp(c, b))
+	{
+		sa(ts_ptr);
+		rra(ts_ptr);
+	}
+}
+
+void	sort_stack(t_two_stacks *ts_ptr)
+{
+	if (stack_sorted(&ts_ptr->a, ASCENDING))
+		return ;
+	if (ts_ptr->a.size == 2)
+		return (sa(ts_ptr));
+	if (ts_ptr->a.size == 3)
+		return (sort_three(ts_ptr, ASCENDING));
+	normalize_stack(&ts_ptr->a);
+	merge_sort(ts_ptr);
 }
 
 static int	stack_sorted(t_stack *stack_ptr, int order)

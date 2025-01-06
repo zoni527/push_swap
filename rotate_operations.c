@@ -14,29 +14,37 @@
 
 static void	rx(t_stack *s1, t_stack *s2);
 
-void	ra(t_two_stacks *two_stacks_ptr)
+void	ra(t_two_stacks *ts_ptr)
 {
-	if (two_stacks_ptr->a.size <= 1)
+	if (ts_ptr->a.size < 2)
 		return ;
 	ft_printf("%s\n", "ra");
-	rx(&two_stacks_ptr->a, &two_stacks_ptr->b);
+	rx(&ts_ptr->a, &ts_ptr->b);
+	if (ts_ptr->a.error || ts_ptr->b.error)
+		cleanup_and_exit(&ts_ptr);
 }
 
-void	rb(t_two_stacks *two_stacks_ptr)
+void	rb(t_two_stacks *ts_ptr)
 {
-	if (two_stacks_ptr->b.size <= 1)
+	if (ts_ptr->b.size < 2)
 		return ;
 	ft_printf("%s\n", "rb");
-	rx(&two_stacks_ptr->b, &two_stacks_ptr->a);
+	rx(&ts_ptr->b, &ts_ptr->a);
+	if (ts_ptr->a.error || ts_ptr->b.error)
+		cleanup_and_exit(&ts_ptr);
 }
 
-void	rr(t_two_stacks *two_stacks_ptr)
+void	rr(t_two_stacks *ts_ptr)
 {
-	if (two_stacks_ptr->a.size <= 1 && two_stacks_ptr->b.size <= 1)
+	if (ts_ptr->a.size < 2 && ts_ptr->b.size < 2)
 		return ;
 	ft_printf("%s\n", "rr");
-	rx(&two_stacks_ptr->a, &two_stacks_ptr->b);
-	rx(&two_stacks_ptr->b, &two_stacks_ptr->a);
+	if (ts_ptr->a.size >= 2)
+		rx(&ts_ptr->a, &ts_ptr->b);
+	if (ts_ptr->b.size >= 2)
+		rx(&ts_ptr->b, &ts_ptr->a);
+	if (ts_ptr->a.error || ts_ptr->b.error)
+		cleanup_and_exit(&ts_ptr);
 }
 
 static void	rx(t_stack *s1, t_stack *s2)
@@ -44,8 +52,6 @@ static void	rx(t_stack *s1, t_stack *s2)
 	int	first_element;
 	int	original_size;
 
-	if (s1->size <= 1)
-		return ;
 	original_size = s1->size;
 	first_element = pop(s1);
 	while (s1->size > 0)

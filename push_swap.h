@@ -30,13 +30,14 @@ typedef struct s_two_stacks
 {
 	t_stack	a;
 	t_stack	b;
-	int		error;
 }	t_two_stacks;
 
 int				validate_input(char **command_line_arguments);
 int				valid_multinumberstring(char *str);
 t_two_stacks	*parse_input(char **cl_input);
 void			sort_stack(t_two_stacks *two_stacks_ptr);
+
+void			cleanup_and_exit(t_two_stacks **ts_ptr_ptr);
 
 void			sa(t_two_stacks *stacks_ptr);
 void			sb(t_two_stacks *stacks_ptr);

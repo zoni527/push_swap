@@ -14,23 +14,37 @@
 
 static void	rrx(t_stack *s1, t_stack *s2);
 
-void	rra(t_two_stacks *stacks_ptr)
+void	rra(t_two_stacks *ts_ptr)
 {
+	if (ts_ptr->a.size < 2)
+		return ;
 	ft_printf("%s\n", "rra");
-	rrx(&stacks_ptr->a, &stacks_ptr->b);
+	rrx(&ts_ptr->a, &ts_ptr->b);
+	if (ts_ptr->a.error || ts_ptr->b.error)
+		cleanup_and_exit(&ts_ptr);
 }
 
-void	rrb(t_two_stacks *stacks_ptr)
+void	rrb(t_two_stacks *ts_ptr)
 {
+	if (ts_ptr->b.size < 2)
+		return ;
 	ft_printf("%s\n", "rrb");
-	rrx(&stacks_ptr->b, &stacks_ptr->a);
+	rrx(&ts_ptr->b, &ts_ptr->a);
+	if (ts_ptr->a.error || ts_ptr->b.error)
+		cleanup_and_exit(&ts_ptr);
 }
 
-void	rrr(t_two_stacks *stacks_ptr)
+void	rrr(t_two_stacks *ts_ptr)
 {
+	if (ts_ptr->a.size < 2 && ts_ptr->b.size < 2)
+		return ;
 	ft_printf("%s\n", "rrr");
-	rrx(&stacks_ptr->a, &stacks_ptr->b);
-	rrx(&stacks_ptr->b, &stacks_ptr->a);
+	if (ts_ptr->a.size >= 2)
+		rrx(&ts_ptr->a, &ts_ptr->b);
+	if (ts_ptr->b.size >= 2)
+		rrx(&ts_ptr->b, &ts_ptr->a);
+	if (ts_ptr->a.error || ts_ptr->b.error)
+		cleanup_and_exit(&ts_ptr);
 }
 
 static void	rrx(t_stack *s1, t_stack *s2)
@@ -38,8 +52,6 @@ static void	rrx(t_stack *s1, t_stack *s2)
 	int	last_element;
 	int	original_size;
 
-	if (s1->size <= 1)
-		return ;
 	original_size = s1->size;
 	while (s1->size > 1)
 		push(s2, pop(s1));

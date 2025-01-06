@@ -18,11 +18,12 @@ int	main(int argc, char **argv)
 {
 	t_two_stacks	*two_stacks_ptr;
 
-	if (argc == 1 || !validate_input(argv + 1))
+	if (argc == 1)
+		return (0);
+	if (!validate_input(argv + 1))
 		return (write_error_return_int("Error", 0));
 	two_stacks_ptr = parse_input(argv + 1);
-	if (!two_stacks_ptr || two_stacks_ptr->error
-		|| two_stacks_ptr->a.error || two_stacks_ptr->b.error)
+	if (!two_stacks_ptr || two_stacks_ptr->a.error || two_stacks_ptr->b.error)
 	{
 		free_stacks(&two_stacks_ptr);
 		return (write_error_return_int("Error", 0));

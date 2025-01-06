@@ -14,23 +14,37 @@
 
 static void	sx(t_stack *x);
 
-void	sa(t_two_stacks *stacks_ptr)
+void	sa(t_two_stacks *ts_ptr)
 {
+	if (ts_ptr->a.size < 2)
+		return ;
 	ft_printf("%s\n", "sa");
-	sx(&stacks_ptr->a);
+	sx(&ts_ptr->a);
+	if (ts_ptr->a.error)
+		cleanup_and_exit(&ts_ptr);
 }
 
-void	sb(t_two_stacks *stacks_ptr)
+void	sb(t_two_stacks *ts_ptr)
 {
+	if (ts_ptr->a.size < 2)
+		return ;
 	ft_printf("%s\n", "sb");
-	sx(&stacks_ptr->b);
+	sx(&ts_ptr->b);
+	if (ts_ptr->b.error)
+		cleanup_and_exit(&ts_ptr);
 }
 
-void	ss(t_two_stacks *stacks_ptr)
+void	ss(t_two_stacks *ts_ptr)
 {
+	if (ts_ptr->a.size < 2 && ts_ptr->b.size < 2)
+		return ;
 	ft_printf("%s\n", "ss");
-	sx(&stacks_ptr->a);
-	sx(&stacks_ptr->b);
+	if (ts_ptr->a.size >= 2)
+		sx(&ts_ptr->a);
+	if (ts_ptr->b.size >= 2)
+		sx(&ts_ptr->b);
+	if (ts_ptr->a.error || ts_ptr->b.error)
+		cleanup_and_exit(&ts_ptr);
 }
 
 static void	sx(t_stack *x)
@@ -38,8 +52,6 @@ static void	sx(t_stack *x)
 	int	temp1;
 	int	temp2;
 
-	if (x->size < 2)
-		return ;
 	temp1 = pop(x);
 	temp2 = pop(x);
 	push(x, temp1);
