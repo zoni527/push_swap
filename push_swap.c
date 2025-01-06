@@ -29,6 +29,7 @@ int	main(int argc, char **argv)
 		return (write_error_return_int("Error", 0));
 	}
 	sort_stack(two_stacks_ptr);
+	free_stacks(&two_stacks_ptr);
 	return (0);
 }
 

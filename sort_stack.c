@@ -21,19 +21,128 @@
 
 static int	stack_sorted(t_stack *stack_ptr, int order);
 static int	first_element_greater_than_second(t_stack *stack_ptr);
-static void	merge_sort(t_two_stacks *ts_ptr);
-static void	divide_and_presort(t_two_stacks *ts_ptr);
-void	merge_sorted_portions_and_rotate_to_end(t_two_stacks *ts_ptr);
-int	first_int_larger(int a, int b);
-int	first_int_smaller(int a, int b);
-void	skip_sorted_sublist(t_list **node_ptr, int order);
-int	node_val(t_list *node);
-int	last_element_val(t_stack *stack_ptr);
-int	top_sorted_sublist_len(t_stack *stack_ptr, int order);
-int	bottom_sorted_sublist_len(t_stack *stack_ptr, int order);
-int	count_sublist_len(t_list *node, int order);
-int	count_sorted_sublists(t_stack *stack, int order);
-void	sort_a_b_c(t_two_stacks *ts_ptr, int a, int b, int c, int order);
+
+void		merge_sorted_portions_and_rotate_to_end(t_two_stacks *ts_ptr);
+
+int			first_int_larger(int a, int b);
+int			first_int_smaller(int a, int b);
+
+void		skip_sorted_sublist(t_list **node_ptr, int order);
+
+int			node_val(t_list *node);
+int			last_element_val(t_stack *stack_ptr);
+int			top_sorted_sublist_len(t_stack *stack_ptr, int order);
+int			bottom_sorted_sublist_len(t_stack *stack_ptr, int order);
+
+int			sublist_len(t_list *node, int order);
+int			count_sorted_sublists(t_stack *stack, int order);
+
+void		sort_three(t_two_stacks *ts_ptr, int order);
+void		sort_a_b_c(t_two_stacks *ts_ptr, int a, int b, int c, int order);
+
+void		normalize_stack(t_stack *stack);
+t_list		*next_largest_node(t_list *lst, int num);
+void		insertion_sort(t_two_stacks *ts_ptr);
+
+t_list		*min_node(t_list *lst);
+
+void	sort_stack(t_two_stacks *ts_ptr)
+{
+	if (stack_sorted(&ts_ptr->a, ASCENDING))
+		return ;
+	if (ts_ptr->a.size == 2)
+		return (sa(ts_ptr));
+	if (ts_ptr->a.size == 3)
+		sort_three(ts_ptr, ASCENDING);
+	normalize_stack(&ts_ptr->a);
+	insertion_sort(ts_ptr);
+	print_stack(&ts_ptr->a);
+}
+
+static int	stack_sorted(t_stack *stack_ptr, int order)
+{
+	t_list	*node;
+	int		(*comp)(int a, int b);
+
+	if (stack_ptr->size == 1)
+		return (1);
+	node = stack_ptr->top;
+	if (order == ASCENDING)
+		comp = first_int_larger;
+	else
+		comp = first_int_smaller;
+	while (node->next)
+	{
+		if (comp(node_val(node), node_val(node->next)))
+			return (0);
+		node = node->next;
+	}
+	return (1);
+}
+
+void	sort_three(t_two_stacks *ts_ptr, int order)
+{
+	int	first;
+	int	second;
+	int	third;
+
+	first = node_val(ts_ptr->a.top);
+	second = node_val(ts_ptr->a.top->next);
+	third = node_val(ts_ptr->a.top->next->next);
+	sort_a_b_c(ts_ptr, first, second, third, order);
+}
+
+// The combinations of comparisons correspong to the 5 different sortable
+// cases for three numbers, for ascending order this means 1 3 2, 2 1 3,
+// 2 3 1, 3 1 2 and 3 2 1. Changing the function to first_int_larger flips
+// the comparisons and correctly sorts three numbers in descending order.
+void	sort_a_b_c(t_two_stacks *ts_ptr, int a, int b, int c, int order)
+{
+	int	(*comp)(int a, int b);
+
+	if (order == ASCENDING)
+		comp = first_int_smaller;
+	else
+		comp = first_int_larger;
+	if (comp(b, a) && comp(b, c) && comp(c, a))
+		ra(ts_ptr);
+	if (comp(a, b) && comp(c, b) && comp(c, a))
+		rra(ts_ptr);
+	if (comp(b, a) && comp(b, c) && comp(a, c))
+		sa(ts_ptr);
+	if (comp(a, b) && comp(c, b) && comp(a, c))
+	{
+		sa(ts_ptr);
+		ra(ts_ptr);
+	}
+	if (comp(b, a) && comp(c, b))
+	{
+		sa(ts_ptr);
+		rra(ts_ptr);
+	}
+}
+
+// Change the values of the stack elements to be consecutive integers starting
+// from 0. These values can be useful when comparing against the total size
+// of the stack and when calculating the amount of moves needed.
+void	normalize_stack(t_stack *stack)
+{
+	int		min;
+	int		count;
+	t_list	*node;
+
+	if (!stack->size)
+		return ;
+	node = min_node(stack->top);
+	count = 0;
+	while (count < stack->size)
+	{
+		*(int *)node->content = count;
+		min = node_val(node);
+		node = next_largest_node(stack->top, min);
+		count++;
+	}
+}
 
 t_list *min_node(t_list *lst)
 {
@@ -42,9 +151,9 @@ t_list *min_node(t_list *lst)
 
 	if (!lst)
 		return (NULL);
-	min = INT_MAX;
 	if (!lst->next)
 		return (lst);
+	min = INT_MAX;
 	node = NULL;
 	while (lst)
 	{
@@ -83,198 +192,24 @@ t_list	*next_largest_node(t_list *lst, int num)
 	return (node);
 }
 
-void	normalize_stack(t_stack *stack)
+void	insertion_sort(t_two_stacks *ts_ptr)
 {
-	int	min;
-	int	count;
-	t_list *node;
+	int	b_min;
+	int	b_max;
+	int	moves_to_top;
+	int	min_cost;
+	int	min_cost_element_index;
+	int	i;
 
-	if (!stack->size)
-		return ;
-	min = INT_MIN;
-	node = stack->top;
-	count = 0;
-	while (count < stack->size)
+	pb(ts_ptr);
+	b_max = node_val(ts_ptr->b.top);
+	b_min = b_max;
+	while (ts_ptr->a.size > 3)
 	{
-		node = next_largest_node(stack->top, min);
-		*(int *)node->content = count;
-		min = node_val(node);
-		count++;
-	}
-}
-
-void	sort_three(t_two_stacks *ts_ptr, int order)
-{
-	int	first;
-	int	second;
-	int	third;
-
-	first = node_val(ts_ptr->a.top);
-	second = node_val(ts_ptr->a.top->next);
-	third = node_val(ts_ptr->a.top->next->next);
-	sort_a_b_c(ts_ptr, first, second, third, order);
-}
-
-void	sort_a_b_c(t_two_stacks *ts_ptr, int a, int b, int c, int order)
-{
-	int	(*comp)(int a, int b);
-
-	if (order == ASCENDING)
-		comp = first_int_smaller;
-	else
-		comp = first_int_larger;
-	if (comp(b, a) && comp(b, c) && comp(c, a))
-		ra(ts_ptr);
-	if (comp(a, b) && comp(c, b) && comp(c, a))
-		rra(ts_ptr);
-	if (comp(b, a) && comp(b, c) && comp(a, c))
-		sa(ts_ptr);
-	if (comp(a, b) && comp(c, b) && comp(a, c))
-	{
-		sa(ts_ptr);
-		ra(ts_ptr);
-	}
-	if (comp(b, a) && comp(c, b))
-	{
-		sa(ts_ptr);
-		rra(ts_ptr);
-	}
-}
-
-void	sort_stack(t_two_stacks *ts_ptr)
-{
-	if (stack_sorted(&ts_ptr->a, ASCENDING))
-		return ;
-	if (ts_ptr->a.size == 2)
-		return (sa(ts_ptr));
-	if (ts_ptr->a.size == 3)
-		return (sort_three(ts_ptr, ASCENDING));
-	normalize_stack(&ts_ptr->a);
-	merge_sort(ts_ptr);
-}
-
-static int	stack_sorted(t_stack *stack_ptr, int order)
-{
-	t_list	*node;
-	int		(*comp)(int a, int b);
-
-	if (stack_ptr->size == 1)
-		return (1);
-	node = stack_ptr->top;
-	if (order == ASCENDING)
-		comp = first_int_larger;
-	else
-		comp = first_int_smaller;
-	while (node->next)
-	{
-		if (comp(node_val(node), node_val(node->next)))
-			return (0);
-		node = node->next;
-	}
-	return (1);
-}
-
-static void	merge_sort(t_two_stacks *ts_ptr)
-{
-	int	counter;
-
-	counter = 100000;
-	divide_and_presort(ts_ptr);
-	while (counter-- && (ts_ptr->b.size || !stack_sorted(&ts_ptr->a, ASCENDING)))
-	{
-		merge_sorted_portions_and_rotate_to_end(ts_ptr);
-	}
-}
-
-// First push half of a to b and presort
-static void	divide_and_presort(t_two_stacks *ts_ptr)
-{
-	int	groups_of_two_in_half;
-	int	a_swappable;
-	int	b_swappable;
-
-	groups_of_two_in_half = ts_ptr->a.size / 4;
-	if (groups_of_two_in_half == 0)
-		groups_of_two_in_half++;
-	while (groups_of_two_in_half--)
-	{
-		pb(ts_ptr);
-		pb(ts_ptr);
-		a_swappable = first_element_greater_than_second(&ts_ptr->a);
-		b_swappable = !first_element_greater_than_second(&ts_ptr->b);
-		if (a_swappable && b_swappable)
-			ss(ts_ptr);
-		if (a_swappable && !b_swappable)
-			sa(ts_ptr);
-		if (b_swappable && !a_swappable)
-			sb(ts_ptr);
-		ra(ts_ptr);
-		ra(ts_ptr);
-	}
-	if ((ts_ptr->a.size + ts_ptr->b.size) % 4 != 0)
-		pb(ts_ptr);
-}
-
-void	merge_sorted_portions_and_rotate_to_end(t_two_stacks *ts_ptr)
-{
-	int		first_sorted_sublist_len;
-	int		bottom_sorted_sublist_len_a;
-	int		top_sorted_sublist_len_b;
-	int		sorted_sublists;
-
-	if (!ts_ptr->a.size)
-	{
-		if (stack_sorted(&ts_ptr->b, DESCENDING))
+		i = -1;
+		while (++i < ts_ptr->a.size)
 		{
-			while (ts_ptr->b.size)
-				pa(ts_ptr);
-			return ;
-		}
-		sorted_sublists = count_sorted_sublists(&ts_ptr->b, DESCENDING);
-		sorted_sublists /= 2;
-		while (sorted_sublists--)
-		{
-			first_sorted_sublist_len = top_sorted_sublist_len(&ts_ptr->b, DESCENDING);
-			while (first_sorted_sublist_len--)
-				pa(ts_ptr);
-		}
-	}
-	if (!ts_ptr->b.size)
-	{
-		sorted_sublists = count_sorted_sublists(&ts_ptr->a, ASCENDING);
-		sorted_sublists /= 2;
-		while (sorted_sublists--)
-		{
-			first_sorted_sublist_len = top_sorted_sublist_len(&ts_ptr->a, ASCENDING);
-			while (first_sorted_sublist_len--)
-				pb(ts_ptr);
-		}
-	}
-	bottom_sorted_sublist_len_a = bottom_sorted_sublist_len(&ts_ptr->a, ASCENDING);
-	top_sorted_sublist_len_b = top_sorted_sublist_len(&ts_ptr->b, DESCENDING);
-	while (bottom_sorted_sublist_len_a || top_sorted_sublist_len_b)
-	{
-		if (bottom_sorted_sublist_len_a && top_sorted_sublist_len_b
-			&& peek(&ts_ptr->b) < last_element_val(&ts_ptr->a))
-		{
-			rra(ts_ptr);
-			bottom_sorted_sublist_len_a--;
-		}
-		else if (bottom_sorted_sublist_len_a && top_sorted_sublist_len_b
-			&& peek(&ts_ptr->b) > last_element_val(&ts_ptr->a))
-		{
-			pa(ts_ptr);
-			top_sorted_sublist_len_b--;
-		}
-		else if (bottom_sorted_sublist_len_a && !top_sorted_sublist_len_b)
-		{
-			rra(ts_ptr);
-			bottom_sorted_sublist_len_a--;
-		}
-		else
-		{
-			pa(ts_ptr);
-			top_sorted_sublist_len_b--;
+			
 		}
 	}
 }
@@ -295,7 +230,7 @@ int	last_element_val(t_stack *stack_ptr)
 
 int	top_sorted_sublist_len(t_stack *stack_ptr, int order)
 {
-	return (count_sublist_len(stack_ptr->top, order));
+	return (sublist_len(stack_ptr->top, order));
 }
 
 int	bottom_sorted_sublist_len(t_stack *stack_ptr, int order)
@@ -307,10 +242,10 @@ int	bottom_sorted_sublist_len(t_stack *stack_ptr, int order)
 	node = stack_ptr->top;
 	while (sorted_sublists--)
 		skip_sorted_sublist(&node, order);
-	return (count_sublist_len(node, order));
+	return (sublist_len(node, order));
 }
 
-int	count_sublist_len(t_list *node, int order)
+int	sublist_len(t_list *node, int order)
 {
 	int	(*comp)(int a, int b);
 	int	count;
