@@ -15,14 +15,18 @@
 
 # include "./libft/libft.h"
 
-# define MALLOCERROR 1
-# define POPERROR 2
-# define PEEKERROR 3
+# define MALLOCERROR	 1
+# define POPERROR		 2
+# define PEEKERROR		 3
+
+# define ASCENDING		 0
+# define DESCENDING		 1
 
 typedef struct s_stack
 {
 	t_list	*top;
 	int		size;
+	int		order;
 	int		error;
 }	t_stack;
 

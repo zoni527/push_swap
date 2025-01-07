@@ -16,29 +16,29 @@ static void	free_stacks(t_two_stacks **two_stacks_ptr_ptr);
 
 int	main(int argc, char **argv)
 {
-	t_two_stacks	*two_stacks_ptr;
+	t_two_stacks	*ts_ptr;
 
 	if (argc == 1)
 		return (0);
 	if (!validate_input(argv + 1))
 		return (write_error_return_int("Error", 0));
-	two_stacks_ptr = parse_input(argv + 1);
-	if (!two_stacks_ptr || two_stacks_ptr->a.error || two_stacks_ptr->b.error)
+	ts_ptr = parse_input(argv + 1);
+	if (!ts_ptr || ts_ptr->a.error || ts_ptr->b.error)
 	{
-		free_stacks(&two_stacks_ptr);
+		free_stacks(&ts_ptr);
 		return (write_error_return_int("Error", 0));
 	}
-	sort_stack(two_stacks_ptr);
-	free_stacks(&two_stacks_ptr);
+	sort_stack(ts_ptr);
+	free_stacks(&ts_ptr);
 	return (0);
 }
 
-static void	free_stacks(t_two_stacks **two_stacks_ptr_ptr)
+static void	free_stacks(t_two_stacks **ts_ptr_ptr)
 {
-	if ((*two_stacks_ptr_ptr)->a.top)
-		ft_lstclear(&(*two_stacks_ptr_ptr)->a.top, free);
-	if ((*two_stacks_ptr_ptr)->b.top)
-		ft_lstclear(&(*two_stacks_ptr_ptr)->b.top, free);
-	free(*two_stacks_ptr_ptr);
-	*two_stacks_ptr_ptr = NULL;
+	if ((*ts_ptr_ptr)->a.top)
+		ft_lstclear(&(*ts_ptr_ptr)->a.top, free);
+	if ((*ts_ptr_ptr)->b.top)
+		ft_lstclear(&(*ts_ptr_ptr)->b.top, free);
+	free(*ts_ptr_ptr);
+	*ts_ptr_ptr = NULL;
 }
