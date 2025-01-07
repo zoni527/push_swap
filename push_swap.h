@@ -36,6 +36,17 @@ typedef struct s_two_stacks
 	t_stack	b;
 }	t_two_stacks;
 
+typedef struct s_instructions
+{
+	int	ra;
+	int	rb;
+	int	rra;
+	int	rrb;
+	int	rr;
+	int	rrr;
+	int	cost;
+}	t_instructions;
+
 int				validate_input(char **command_line_arguments);
 int				valid_multinumberstring(char *str);
 t_two_stacks	*parse_input(char **cl_input);

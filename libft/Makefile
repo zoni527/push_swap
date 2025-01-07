@@ -49,7 +49,8 @@ SRC =	ft_isalpha.c	ft_isdigit.c	ft_isalnum.c	ft_isascii.c	\
 	ft_atol.c	\
 	word_count.c	\
 	skip_whitespace.c	skip_char.c	\
-	larger_int.c	smaller_int.c
+	larger_int.c	smaller_int.c	\
+	ft_iabs.c
 
 OBJ = $(SRC:.c=.o)
 

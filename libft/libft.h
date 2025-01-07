@@ -165,4 +165,6 @@ char		*skip_char(const char *str, char c);
 int			larger_int(int a, int b);
 int			smaller_int(int a, int b);
 
+int			ft_iabs(int num);
+
 #endif
