@@ -54,4 +54,4 @@ dkms.conf
 .cache
 push_swap
 *.json
-*.sh
+push_swap_visualizer

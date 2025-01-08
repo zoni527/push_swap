@@ -14,5 +14,7 @@
 
 int	smaller_int(int a, int b)
 {
+	if (a == b)
+		return (a);
 	return ((a < b) * a + (b < a) * b);
 }

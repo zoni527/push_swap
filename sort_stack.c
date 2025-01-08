@@ -35,8 +35,10 @@ t_list		*next_smaller_node(t_list *lst, int num);
 void		insertion_sort(t_two_stacks *ts_ptr);
 
 t_list		*min_node(t_list *lst);
+t_list		*max_node(t_list *lst);
 
 int	element_val(t_stack *stack_ptr, int index);
+int	element_index(t_stack *stack_ptr, int num);
 int	element_to_push_on_index(t_stack *stack_ptr, int num);
 
 void	ra_n(t_two_stacks *ts_ptr, int n);
@@ -57,8 +59,8 @@ void	sort_stack(t_two_stacks *ts_ptr)
 	if (ts_ptr->a.size == 2)
 		return (sa(ts_ptr));
 	if (ts_ptr->a.size == 3)
-		sort_three(ts_ptr);
-	normalize_stack(&ts_ptr->a);
+		return (sort_three(ts_ptr));
+	// normalize_stack(&ts_ptr->a);
 	insertion_sort(ts_ptr);
 }
 
@@ -130,21 +132,28 @@ void	sort_a_b_c(t_two_stacks *ts_ptr, int a, int b, int c)
 // of the stack and when calculating the amount of moves needed.
 void	normalize_stack(t_stack *stack)
 {
-	int		min;
-	int		count;
+	int		max;
+	t_stack temp;
 	t_list	*node;
 
 	if (!stack->size)
 		return ;
-	node = min_node(stack->top);
-	count = 0;
-	while (count < stack->size)
+	temp = (t_stack){0};
+	node = max_node(stack->top);
+	while (node)
 	{
-		*(int *)node->content = count;
-		min = node_val(node);
-		node = next_larger_node(stack->top, min);
-		count++;
+		push(&temp, node_val(node));
+		max = node_val(node);
+		node = next_smaller_node(stack->top, max);
 	}
+	node = stack->top;
+	while (node)
+	{
+		*(int *)node->content = element_index(&temp, node_val(node));
+		node = node->next;
+	}
+	while (temp.size)
+		pop(&temp);
 }
 
 t_list	*min_node(t_list *lst)
@@ -200,7 +209,7 @@ int	min_val(t_stack *stack_ptr)
 
 int	max_val(t_stack *stack_ptr)
 {
-	return (node_val(min_node(stack_ptr->top)));
+	return (node_val(max_node(stack_ptr->top)));
 }
 
 t_list	*next_larger_node(t_list *lst, int num)
@@ -277,8 +286,6 @@ void	insertion_sort(t_two_stacks *ts_ptr)
 	t_instructions	instructions;
 	t_list			*node;
 
-	print_stack(&ts_ptr->a);
-	print_stack(&ts_ptr->b);
 	pb(ts_ptr);
 	while (ts_ptr->a.size > 3)
 	{
@@ -341,8 +348,49 @@ void	insertion_sort(t_two_stacks *ts_ptr)
 		rra_n(ts_ptr, instructions.rra);
 		rrb_n(ts_ptr, instructions.rrb);
 		pb(ts_ptr);
-		print_stack(&ts_ptr->a);
-		print_stack(&ts_ptr->b);
+	}
+	if (!stack_sorted(&ts_ptr->b))
+	{
+		moves_b_up = element_index(&ts_ptr->b, max_val(&ts_ptr->b));
+		moves_b_down = ts_ptr->b.size - moves_b_up;
+		if (moves_b_up < moves_b_down)
+			rb_n(ts_ptr, moves_b_up);
+		else
+			rrb_n(ts_ptr, moves_b_down);
+	}
+	sort_three(ts_ptr);
+	while (ts_ptr->b.size 
+		&& node_val(ts_ptr->b.top) > last_element_val(&ts_ptr->a))
+		pa(ts_ptr);
+	if (!ts_ptr->b.size)
+	{
+		if (stack_sorted(&ts_ptr->a))
+			return ;
+		moves_a_up = element_index(&ts_ptr->a, min_val(&ts_ptr->a));
+		moves_a_down = ts_ptr->a.size - moves_a_up;
+		if (moves_a_up < moves_a_down)
+			ra_n(ts_ptr, moves_a_up);
+		else
+			rra_n(ts_ptr, moves_a_down);
+	}
+	while (ts_ptr->b.size)
+	{
+		moves_a_up = element_to_push_on_index(&ts_ptr->a, node_val(ts_ptr->b.top));
+		moves_a_down = ts_ptr->a.size - moves_a_up;
+		if (moves_a_up < moves_a_down)
+			ra_n(ts_ptr, moves_a_up);
+		else
+			rra_n(ts_ptr, moves_a_down);
+		pa(ts_ptr);
+	}
+	if (!stack_sorted(&ts_ptr->a))
+	{
+		moves_a_up = element_index(&ts_ptr->a, min_val(&ts_ptr->a));
+		moves_a_down = ts_ptr->a.size - moves_a_up;
+		if (moves_a_up < moves_a_down)
+			ra_n(ts_ptr, moves_a_up);
+		else
+			rra_n(ts_ptr, moves_a_down);
 	}
 }
 
@@ -445,7 +493,6 @@ int	element_to_push_on_index(t_stack *stack_ptr, int num)
 {
 	int	max;
 	int	min;
-	int	index;
 
 	if (stack_ptr->size < 2)
 		return (0);
@@ -456,10 +503,9 @@ int	element_to_push_on_index(t_stack *stack_ptr, int num)
 	if (stack_ptr->order == ASCENDING && (num > max || num < min))
 		return(element_index(stack_ptr, min));
 	if (stack_ptr->order == ASCENDING)
-		index = element_index(stack_ptr, next_larger_val(stack_ptr, num));
+		return(element_index(stack_ptr, next_larger_val(stack_ptr, num)));
 	else
-		index = element_index(stack_ptr, next_smaller_val(stack_ptr, num));
-	return (index);
+		return(element_index(stack_ptr, next_smaller_val(stack_ptr, num)));
 }
 
 int	last_element_val(t_stack *stack_ptr)
