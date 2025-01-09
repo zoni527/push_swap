@@ -47,6 +47,18 @@ typedef struct s_instructions
 	int	cost;
 }	t_instructions;
 
+typedef struct s_moveset
+{
+	int	cost_up;
+	int	cost_down;
+	int	cost_up_down;
+	int	cost_down_up;
+	int	a_up;
+	int	a_down;
+	int	b_up;
+	int	b_down;
+}	t_moveset;
+
 int				validate_input(char **command_line_arguments);
 int				valid_multinumberstring(char *str);
 t_two_stacks	*parse_input(char **cl_input);

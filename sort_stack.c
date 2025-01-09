@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft/libft.h"
 #include "push_swap.h"
 
 static int	stack_sorted(t_stack *stack_ptr);
@@ -272,107 +273,138 @@ int	next_smaller_val(t_stack *stack_ptr, int num)
 	return (node_val(next_smaller_node(stack_ptr->top, num)));
 }
 
-void	insertion_sort(t_two_stacks *ts_ptr)
+void	assign_up(t_instructions *inst_ptr, int cost, int m_a_up, int m_b_up)
 {
-	int				moves_a_up;
-	int				moves_a_down;
-	int				moves_b_up;
-	int				moves_b_down;
+	reset_instructions(inst_ptr);
+	inst_ptr->cost = cost;
+	inst_ptr->rr = smaller_int(m_a_up, m_b_up);
+	if (m_a_up > m_b_up)
+		inst_ptr->ra = m_a_up - m_b_up;
+	else
+		inst_ptr->rb = m_b_up - m_a_up;
+}
+
+void	assign_down(t_instructions *inst_ptr, int cost,
+				 int m_a_down, int m_b_down)
+{
+	reset_instructions(inst_ptr);
+	inst_ptr->cost = cost;
+	inst_ptr->rrr = smaller_int(m_a_down, m_b_down);
+	if (m_a_down > m_b_down)
+		inst_ptr->rra = m_a_down - m_b_down;
+	else
+		inst_ptr->rrb = m_b_down - m_a_down;
+}
+
+void	assign_up_down(t_instructions *inst_ptr, int cost,
+				 int m_a_up, int m_b_down)
+{
+	reset_instructions(inst_ptr);
+	inst_ptr->cost = cost;
+	inst_ptr->ra = m_a_up;
+	inst_ptr->rrb = m_b_down;
+}
+
+void	assign_down_up(t_instructions *inst_ptr, int cost,
+				 int m_a_down, int m_b_up)
+{
+	reset_instructions(inst_ptr);
+	inst_ptr->cost = cost;
+	inst_ptr->rra = m_a_down;
+	inst_ptr->rb = m_b_up;
+}
+
+void	calculate_moves(t_two_stacks *ts_ptr, t_moveset *moves, int index)
+{
+	t_stack	*a;
+	t_stack	*b;
+
+	a = &ts_ptr->a;
+	b = &ts_ptr->b;
+	moves->a_up = index;
+	moves->b_up = element_to_push_on_index(b, element_val(a, index));
+	moves->a_down = a->size - moves->a_up;
+	moves->b_down = b->size - moves->b_up;
+	moves->cost_up = larger_int(moves->a_up, moves->b_up);
+	moves->cost_down = larger_int(moves->a_down, moves->b_down);
+	moves->cost_up_down = moves->a_up + moves->b_down;
+	moves->cost_down_up = moves->a_down + moves->b_up;
+}
+
+void	perform_instructions(t_two_stacks *ts_ptr, t_instructions *inst)
+{
+	rr_n(ts_ptr, inst->rr);
+	rrr_n(ts_ptr, inst->rrr);
+	ra_n(ts_ptr, inst->ra);
+	rb_n(ts_ptr, inst->rb);
+	rra_n(ts_ptr, inst->rra);
+	rrb_n(ts_ptr, inst->rrb);
+	pb(ts_ptr);
+}
+
+void	align_sorted_stack(t_stack *stack, t_two_stacks *ts_ptr)
+{
+	int		moves_up;
+	int		moves_down;
+	void	(*rotate)(t_two_stacks *ts_ptr, int amount);
+
+	if (stack->order == ASCENDING)
+		moves_up = element_index(stack, min_val(stack));
+	else
+		moves_up = element_index(stack, max_val(stack));
+	moves_down = stack->size - moves_up;
+	if (moves_up <= moves_down && stack->order == ASCENDING)
+		rotate = ra_n;
+	else if (moves_up <= moves_down && stack->order == DESCENDING)
+		rotate = rb_n;
+	else if (moves_down <= moves_up && stack->order == ASCENDING)
+		rotate = rra_n;
+	else
+		rotate = rrb_n;
+	rotate(ts_ptr, smaller_int(moves_up, moves_down));
+}
+
+void	push_a_to_b(t_two_stacks *ts_ptr)
+{
 	int				i;
-	int				cost1;
-	int				cost2;
-	int				cost3;
-	int				cost4;
-	t_instructions	instructions;
-	t_list			*node;
+	t_moveset		moves;
+	t_instructions	inst;
 
 	pb(ts_ptr);
 	while (ts_ptr->a.size > 3)
 	{
-		node = ts_ptr->a.top;
 		i = -1;
-		reset_instructions(&instructions);
-		instructions.cost = INT_MAX;
+		reset_instructions(&inst);
 		while (++i < ts_ptr->a.size)
 		{
-			moves_a_up = i;
-			moves_a_down = ts_ptr->a.size - moves_a_up;
-			moves_b_up = element_to_push_on_index(&ts_ptr->b, node_val(node));
-			moves_b_down = ts_ptr->b.size - moves_b_up;
-
-			cost1 = larger_int(moves_a_up, moves_b_up);
-			cost2 = larger_int(moves_a_down, moves_b_down);
-			cost3 = moves_a_up + moves_b_down;
-			cost4 = moves_b_up + moves_a_down;
-
-			if (cost1 < instructions.cost)
-			{
-				reset_instructions(&instructions);
-				instructions.cost = cost1;
-				instructions.rr = smaller_int(moves_a_up, moves_b_up);
-				if (moves_a_up > moves_b_up)
-					instructions.ra = moves_a_up - moves_b_up;
-				else
-					instructions.rb = moves_b_up - moves_a_up;
-			}
-			if (cost2 < instructions.cost)
-			{
-				reset_instructions(&instructions);
-				instructions.cost = cost2;
-				instructions.rrr = smaller_int(moves_a_down, moves_b_down);
-				if (moves_a_down > moves_b_down)
-					instructions.rra = moves_a_down - moves_b_down;
-				else
-					instructions.rrb = moves_b_down - moves_a_down;
-			}
-			if (cost3 < instructions.cost)
-			{
-				reset_instructions(&instructions);
-				instructions.cost = cost3;
-				instructions.ra = moves_a_up;
-				instructions.rrb = moves_b_down;
-			}
-			if (cost4 < instructions.cost)
-			{
-				reset_instructions(&instructions);
-				instructions.cost = cost4;
-				instructions.rra = moves_a_down;
-				instructions.rb = moves_b_up;
-			}
-			node = node->next;
+			calculate_moves(ts_ptr, &moves, i);
+			if (moves.cost_up < inst.cost)
+				assign_up(&inst, moves.cost_up, moves.a_up, moves.b_up);
+			if (moves.cost_down < inst.cost)
+				assign_down(&inst, moves.cost_down, moves.a_up, moves.b_up);
+			if (moves.cost_up_down < inst.cost)
+				assign_up_down(&inst, moves.cost_down, moves.a_up, moves.b_up);
+			if (moves.cost_down_up < inst.cost)
+				assign_down_up(&inst, moves.cost_down, moves.a_up, moves.b_up);
 		}
-		rr_n(ts_ptr, instructions.rr);
-		rrr_n(ts_ptr, instructions.rrr);
-		ra_n(ts_ptr, instructions.ra);
-		rb_n(ts_ptr, instructions.rb);
-		rra_n(ts_ptr, instructions.rra);
-		rrb_n(ts_ptr, instructions.rrb);
-		pb(ts_ptr);
+		perform_instructions(ts_ptr, &inst);
 	}
+}
+
+void	insertion_sort(t_two_stacks *ts_ptr)
+{
+	int moves_a_up;
+	int moves_a_down;
+
+	push_a_to_b(ts_ptr);
 	if (!stack_sorted(&ts_ptr->b))
-	{
-		moves_b_up = element_index(&ts_ptr->b, max_val(&ts_ptr->b));
-		moves_b_down = ts_ptr->b.size - moves_b_up;
-		if (moves_b_up < moves_b_down)
-			rb_n(ts_ptr, moves_b_up);
-		else
-			rrb_n(ts_ptr, moves_b_down);
-	}
+		align_sorted_stack(&ts_ptr->b, ts_ptr);
 	sort_three(ts_ptr);
 	while (ts_ptr->b.size 
 		&& node_val(ts_ptr->b.top) > last_element_val(&ts_ptr->a))
 		pa(ts_ptr);
 	if (!ts_ptr->b.size)
-	{
-		if (stack_sorted(&ts_ptr->a))
-			return ;
-		moves_a_up = element_index(&ts_ptr->a, min_val(&ts_ptr->a));
-		moves_a_down = ts_ptr->a.size - moves_a_up;
-		if (moves_a_up < moves_a_down)
-			ra_n(ts_ptr, moves_a_up);
-		else
-			rra_n(ts_ptr, moves_a_down);
-	}
+		align_sorted_stack(&ts_ptr->a, ts_ptr);
 	while (ts_ptr->b.size)
 	{
 		moves_a_up = element_to_push_on_index(&ts_ptr->a, node_val(ts_ptr->b.top));
@@ -384,14 +416,7 @@ void	insertion_sort(t_two_stacks *ts_ptr)
 		pa(ts_ptr);
 	}
 	if (!stack_sorted(&ts_ptr->a))
-	{
-		moves_a_up = element_index(&ts_ptr->a, min_val(&ts_ptr->a));
-		moves_a_down = ts_ptr->a.size - moves_a_up;
-		if (moves_a_up < moves_a_down)
-			ra_n(ts_ptr, moves_a_up);
-		else
-			rra_n(ts_ptr, moves_a_down);
-	}
+		align_sorted_stack(&ts_ptr->a, ts_ptr);
 }
 
 void	reset_instructions(t_instructions *instructions_ptr)
@@ -402,7 +427,7 @@ void	reset_instructions(t_instructions *instructions_ptr)
 	instructions_ptr->rrb = 0;
 	instructions_ptr->rr = 0;
 	instructions_ptr->rrr = 0;
-	instructions_ptr->cost = 0;
+	instructions_ptr->cost = INT_MAX;
 }
 
 void	ra_n(t_two_stacks *ts_ptr, int n)
