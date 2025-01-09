@@ -14,17 +14,28 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 VPATH = ./
 
-SRCDIR = ./
+SRCDIR = ./src/
+INCDIR = ./include/
+
 SRC =	$(SRCDIR)push_swap.c \
-	$(SRCDIR)stack.c \
-	$(SRCDIR)push_operations.c \
-	$(SRCDIR)swap_operations.c \
-	$(SRCDIR)rotate_operations.c \
-	$(SRCDIR)reverse_rotate_operations.c \
-	$(SRCDIR)input_validation.c \
 	$(SRCDIR)input_parsing.c \
+	$(SRCDIR)input_validation.c \
 	$(SRCDIR)sort_stack.c \
-	$(SRCDIR)cleanup_and_exit.c
+	$(SRCDIR)sort_three.c \
+	$(SRCDIR)insertion_sort_01.c \
+	$(SRCDIR)insertion_sort_02.c \
+	$(SRCDIR)element_index_helpers.c \
+	$(SRCDIR)element_value_helpers_01.c \
+	$(SRCDIR)element_value_helpers_02.c \
+	$(SRCDIR)node_helpers.c \
+	$(SRCDIR)cleanup_and_exit.c \
+	$(SRCDIR)swap_operations.c \
+	$(SRCDIR)push_operations.c \
+	$(SRCDIR)rotate_operations.c \
+	$(SRCDIR)rotate_n_operations.c \
+	$(SRCDIR)reverse_rotate_operations.c \
+	$(SRCDIR)reverse_rotate_n_operations.c \
+	$(SRCDIR)stack.c \
 
 OBJ = $(SRC:.c=.o)
 

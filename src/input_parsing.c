@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../include/push_swap.h"
 
 static void	*free_stacks_return_null(t_two_stacks **ts_ptr_ptr);
 

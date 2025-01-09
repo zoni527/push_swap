@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../include/push_swap.h"
+
+static int	valid_multinumberstring(char *str);
 
 int	validate_input(char **command_line_input)
 {
@@ -33,7 +35,7 @@ int	validate_input(char **command_line_input)
 	return (1);
 }
 
-int	valid_multinumberstring(char *str)
+static int	valid_multinumberstring(char *str)
 {
 	int	sign;
 
@@ -51,7 +53,9 @@ int	valid_multinumberstring(char *str)
 		if ((sign > 0 && ft_atol(str) > INT_MAX)
 			|| (sign < 0 && ft_atol(str) > -(long)INT_MIN))
 			return (0);
-		str++;
+		while (ft_isdigit(*str))
+			str++;
+		str = skip_char(str, ' ');
 	}
 	return (1);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../include/push_swap.h"
 
 int	push(t_stack *stack, int num)
 {
@@ -50,7 +50,7 @@ int	pop(t_stack *stack)
 	}
 	temp = stack->top;
 	stack->top = stack->top->next;
-	num = *(int *)(temp->content);
+	num = node_val(temp);
 	ft_lstdelone(temp, free);
 	stack->size--;
 	return (num);
@@ -64,7 +64,7 @@ int	peek(t_stack *stack)
 		stack->error = PEEKERROR;
 		return (-1);
 	}
-	return (*(int *)(stack->top->content));
+	return (node_val(stack->top));
 }
 
 void	print_stack(const t_stack *stack)
@@ -75,7 +75,7 @@ void	print_stack(const t_stack *stack)
 	node = stack->top;
 	while (node != NULL)
 	{
-		num = *(int *)(node->content);
+		num = node_val(node);
 		if (num >= 0)
 			ft_putchar(' ');
 		ft_printf("%i ", num);
@@ -91,7 +91,7 @@ int	stack_contains_number(const t_stack *stack, int num)
 	node = stack->top;
 	while (node)
 	{
-		if (*(int *)node->content == num)
+		if (node_val(node) == num)
 			return (1);
 		node = node->next;
 	}
