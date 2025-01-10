@@ -16,6 +16,8 @@ static void	px(t_stack *s1, t_stack *s2);
 
 void	pa(t_two_stacks *ts_ptr)
 {
+	if (!ts_ptr->b.size)
+		return ;
 	ft_printf("%s\n", "pa");
 	px(&ts_ptr->a, &ts_ptr->b);
 	if (ts_ptr->a.error || ts_ptr->b.error)
@@ -24,6 +26,8 @@ void	pa(t_two_stacks *ts_ptr)
 
 void	pb(t_two_stacks *ts_ptr)
 {
+	if (!ts_ptr->a.size)
+		return ;
 	ft_printf("%s\n", "pb");
 	px(&ts_ptr->b, &ts_ptr->a);
 	if (ts_ptr->a.error || ts_ptr->b.error)
@@ -32,7 +36,5 @@ void	pb(t_two_stacks *ts_ptr)
 
 static void	px(t_stack *s1, t_stack *s2)
 {
-	if (s2->size == 0)
-		return ;
 	push(s1, pop(s2));
 }

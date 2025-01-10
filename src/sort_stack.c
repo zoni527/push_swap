@@ -50,8 +50,7 @@ int	stack_sorted(t_stack *stack_ptr)
 }
 
 // Change the values of the stack elements to be consecutive integers starting
-// from 0. These values can be useful when comparing against the total size
-// of the stack and when calculating the amount of moves needed.
+// from 0 for easier visual evaluation when assessing the stack while testing.
 static void	normalize_stack(t_stack *stack)
 {
 	int		max;

@@ -35,6 +35,8 @@ int	main(int argc, char **argv)
 
 static void	free_stacks(t_two_stacks **ts_ptr_ptr)
 {
+	if (!*ts_ptr_ptr)
+		return ;
 	if ((*ts_ptr_ptr)->a.top)
 		ft_lstclear(&(*ts_ptr_ptr)->a.top, free);
 	if ((*ts_ptr_ptr)->b.top)

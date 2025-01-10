@@ -10,15 +10,16 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = libft.a
+NAME	:= libft.a
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
-AR = ar -crs
+CC	:= cc
+CFLAGS	:= -Wall -Wextra -Werror
+AR	:= ar -crs
+DEBUG	:=
 
-HF = libft.h
+HF	:= libft.h
 
-SRC =	ft_isalpha.c	ft_isdigit.c	ft_isalnum.c	ft_isascii.c	\
+SRC :=	ft_isalpha.c	ft_isdigit.c	ft_isalnum.c	ft_isascii.c	\
 	ft_isprint.c	ft_strlen.c	ft_memset.c	ft_bzero.c	\
 	ft_memcpy.c	ft_memmove.c	ft_strlcpy.c	ft_strlcat.c	\
 	ft_toupper.c	ft_tolower.c	ft_strchr.c	ft_strrchr.c	\
@@ -53,7 +54,7 @@ SRC =	ft_isalpha.c	ft_isdigit.c	ft_isalnum.c	ft_isascii.c	\
 	first_int_larger.c	first_int_smaller.c	\
 	ft_iabs.c
 
-OBJ = $(SRC:.c=.o)
+OBJ	:= $(SRC:.c=.o)
 
 all: $(NAME)
 
@@ -61,7 +62,7 @@ $(NAME): $(OBJ) $(HF)
 	$(AR) $(NAME) $(OBJ)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@ -g
+	$(CC) $(CFLAGS) -c $< -o $@ $(DEBUG)
 clean:
 	rm -f $(OBJ)
 

@@ -10,14 +10,17 @@
 #                                                                              #
 # **************************************************************************** #
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
-VPATH = ./
+NAME	:= push_swap
 
-SRCDIR = ./src/
-INCDIR = ./include/
+CC	:= cc
+CFLAGS	:= -Wall -Wextra -Werror
+RM	:= rm -f
+DEBUG	:=
 
-SRC =	$(SRCDIR)push_swap.c \
+SRCDIR	:= ./src/
+INCDIR	:= ./include/
+
+SRC :=	$(SRCDIR)push_swap.c \
 	$(SRCDIR)input_parsing.c \
 	$(SRCDIR)input_validation.c \
 	$(SRCDIR)sort_stack.c \
@@ -37,24 +40,22 @@ SRC =	$(SRCDIR)push_swap.c \
 	$(SRCDIR)reverse_rotate_n_operations.c \
 	$(SRCDIR)stack.c \
 
-OBJ = $(SRC:.c=.o)
+OBJ	:= $(SRC:.c=.o)
 
-RM = rm -f
+LIBDIR	:= ./libft/
+LIBFT	:= $(LIBDIR)libft.a
+LIBFTH	:= $(LIBDIR)libft.h
 
-LIBDIR = ./libft/
-LIB = libft.a
-LIBH = libft.h
+all: $(NAME)
 
-all: push_swap
+$(NAME): $(OBJ) $(LIBFT) $(LIBFTH)
+	$(CC) $(CFLAGS) -I$(LIBDIR) -I$(INCDIR) $(OBJ) $(LIBFT) -o $@ $(DEBUG)
 
-push_swap: $(OBJ) $(LIBDIR)$(LIBH) $(LIBDIR)$(LIB)
-	$(CC) $(CFLAGS) -I$(SRCDIR) -I$(LIBDIR) $(OBJ) -L$(LIBDIR) -l:$(LIB) -o $@ -g
-
-$(LIBDIR)$(LIB):
+$(LIBFT):
 	make libft.a -C ./libft/
 
 %.o: %.c
-	$(CC) -c $< -o $@ -g
+	$(CC) -c $< -o $@ $(DEBUG)
 
 clean:
 	make clean -C ./libft/
@@ -62,7 +63,7 @@ clean:
 
 fclean: clean
 	make fclean -C ./libft/
-	$(RM) ./push_swap
+	$(RM) $(NAME)
 
 re: fclean all
 

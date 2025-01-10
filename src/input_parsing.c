@@ -28,7 +28,7 @@ t_two_stacks	*parse_input(char **cl_input)
 	{
 		str = skip_whitespace(str);
 		num = ft_atoi(str);
-		if (stack_contains_number(&ts_ptr->a, num))
+		if (stack_contains_number(&ts_ptr->b, num))
 			return (free_stacks_return_null(&ts_ptr));
 		push(&ts_ptr->b, num);
 		str = ft_strchr(str, ' ');
